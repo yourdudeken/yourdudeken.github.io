@@ -1,0 +1,98 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: white;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: white;
+    padding: 1rem;
+    border-bottom: 1px solid #efdddd;
+    border: none;
+    border-radius: bottom 5px;
+    box-shadow: 0 25px 40px rgb(218, 212, 212);
+    text-align: center;
+}
+
+nav a {
+    font-size: small;
+    margin: 0 1rem;
+    text-decoration: none;
+    color: #333;
+    border: none;
+    background-color: transparent;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+}
+
+#bio .profile {
+    margin: 15px 25px ;
+    display: flex;
+    max-width: 900px;
+    background-color: #fff;
+    border: none;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 25px 40px rgba(164, 164, 172, 0.9);
+}
+
+#bio .profile .text {
+    flex: 1;
+    padding-right: 2rem;
+}
+
+#bio .profile .text h1 {
+
+    font-size: 2.5rem;
+    margin: 0.5rem;
+}
+
+#bio .profile .text p {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+}
+
+#bio .profile .text .social {
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+#bio .profile .text .social-icons a {
+    padding-right: 10px;
+    margin: right 0.1rem;;
+}
+
+#bio .profile .text .social-icons img {
+    width: 24px;
+    height: 24px;
+}
+
+#bio .profile .photo {
+    flex: 1;
+}
+
+#bio .profile .photo img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+
+.contact {
+    font-size: small;
+    color: #fff;
+    padding: 5px;
+    border: none;
+    background-color: rgb(99, 99, 171);
+    border-radius: 5px;
+}
+
+.bio {
+    font-size: large;
+}
