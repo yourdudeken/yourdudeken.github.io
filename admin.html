@@ -81,10 +81,13 @@
             const password = document.getElementById('password').value;
             
             try {
-                const response = await fetch('/health', {
+                const response = await fetch('/api/update-about', {
+                    method: 'POST',
                     headers: {
-                        'Authorization': 'Basic ' + btoa(username + ':' + password)
-                    }
+                        'Authorization': 'Basic ' + btoa(username + ':' + password),
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ text: 'test' })
                 });
                 
                 if (response.ok) {
@@ -96,7 +99,7 @@
                 }
             } catch (err) {
                 alert('Invalid credentials');
-                document.getElementById('password').value = '';
+                document.getElementById('password').value = ' ';
             }
         }
 

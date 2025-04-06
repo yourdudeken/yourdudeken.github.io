@@ -37,8 +37,11 @@ let db;
     db = await connectDB();
 })();
 
-// Public health check endpoint
-app.get('/health', (req, res) => {
+// Protected health check endpoint (for authentication testing)
+app.get('/health', basicAuth({
+    users: { 'admin': process.env.ADMIN_PASSWORD || '1234' },
+    challenge: true
+}), (req, res) => {
     res.status(200).json({ 
         status: 'healthy', 
         timestamp: new Date(),
