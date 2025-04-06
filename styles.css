@@ -89,9 +89,10 @@ nav a {
     margin: 0 1rem;
     text-decoration: none;
     color: var(--text);
-    padding: 0.5rem 0;
+    padding: 0.5rem 0.8rem;
     position: relative;
-    transition: color 0.3s ease;
+    border-radius: 4px;
+    transition: all 0.3s ease;
 }
 
 nav a:after {
@@ -107,10 +108,37 @@ nav a:after {
 
 nav a:hover {
     color: var(--primary);
+    background-color: rgba(37, 99, 235, 0.1);
 }
 
 nav a:hover:after {
     width: 100%;
+}
+
+/* Current page indicator */
+nav a[aria-current="page"] {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+nav a[aria-current="page"]:after {
+    width: 100%;
+}
+
+/* Contact button special styling */
+nav a.contact {
+    background-color: var(--primary);
+    color: white;
+    padding: 0.5rem 1.2rem;
+}
+
+nav a.contact:hover {
+    background-color: var(--primary-dark);
+    color: white;
+}
+
+nav a.contact:after {
+    display: none;
 }
 
 main {
@@ -363,6 +391,140 @@ footer {
     text-align: center;
     padding-top: 2rem;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Contact Page Styles */
+.contact-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.contact-container {
+    background: var(--background);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+.contact-content h1 {
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.contact-content h2 {
+    color: var(--text);
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.submit-btn {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+#form-status {
+    margin-top: 1rem;
+    padding: 0.8rem;
+    border-radius: 4px;
+    display: none;
+}
+
+#form-status.success {
+    display: block;
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+#form-status.error {
+    display: block;
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+/* Blog Page Styles */
+.blog-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.blog-container {
+    background: var(--background);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+article {
+    background: white;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+/* About Page Styles */
+.about-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.about-container {
+    background: var(--background);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+.about-section {
+    background: white;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
 }
 
 @media (max-width: 768px) {

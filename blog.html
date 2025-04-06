@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog | Kennedy Muthengi</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header role="banner">
+        <nav role="navigation" aria-label="Main navigation">
+            <div class="nav-container">
+                <a class="bio" href="index.html">Ken's Dev Blog</a>
+                <div class="nav-links">
+                    <a href="index.html">Home</a>
+                    <a href="blog.html" aria-current="page">Blog</a>
+                    <a href="about.html">About</a>
+                    <a class="contact" href="contact.html">Contact</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="blog-content">
+        <div class="blog-container">
+            <h1>My Tech Blog</h1>
+            <article>
+                <h2>Getting Started with React Hooks</h2>
+                <p class="post-date">Published on December 15, 2023</p>
+                <p>A comprehensive guide to using React Hooks in your functional components to manage state and side effects.</p>
+            </article>
+            <article>
+                <h2>Building Responsive Layouts with CSS Grid</h2>
+                <p class="post-date">Published on November 28, 2023</p>
+                <p>Learn how to create flexible and responsive web layouts using modern CSS Grid techniques.</p>
+            </article>
+        </div>
+    </main>
+
+    <footer role="contentinfo">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="blog.html" aria-current="page">Blog</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Connect</h3>
+                <div class="footer-social">
+                    <a href="https://github.com/yourdudeken" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                        <img src="icons/github.png" alt="GitHub">
+                    </a>
+                    <a href="https://linkedin.com/in/yourdudeken" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                        <img src="icons/linkedin.png" alt="LinkedIn">
+                    </a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Info</h3>
+                <p>Nairobi, Kenya</p>
+                <p>Email: kenmwendwamuthengi@gmail.com</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; <span id="year"></span> Kennedy Muthengi. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

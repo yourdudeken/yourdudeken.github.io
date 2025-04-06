@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About | Kennedy Muthengi</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header role="banner">
+        <nav role="navigation" aria-label="Main navigation">
+            <div class="nav-container">
+                <a class="bio" href="index.html">Ken's Dev Blog</a>
+                <div class="nav-links">
+                    <a href="index.html">Home</a>
+                    <a href="blog.html">Blog</a>
+                    <a href="about.html" aria-current="page">About</a>
+                    <a class="contact" href="contact.html">Contact</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="about-content">
+        <div class="about-container">
+            <h1>About Me</h1>
+            
+            <section class="about-section">
+                <h2>My Journey</h2>
+                <p>Full-stack developer with 5+ years of experience building web applications. Passionate about creating efficient, user-friendly solutions that make a real impact.</p>
+            </section>
+
+            <section class="about-section">
+                <h2>Skills</h2>
+                <ul>
+                    <li>JavaScript (ES6+)</li>
+                    <li>React & Next.js</li>
+                    <li>Node.js & Express</li>
+                    <li>MongoDB & PostgreSQL</li>
+                    <li>UI/UX Design</li>
+                </ul>
+            </section>
+
+            <section class="about-section">
+                <h2>Philosophy</h2>
+                <p>I believe in clean, maintainable code and thoughtful user experiences. Every project is an opportunity to learn and improve.</p>
+            </section>
+        </div>
+    </main>
+
+    <footer role="contentinfo">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="about.html" aria-current="page">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Connect</h3>
+                <div class="footer-social">
+                    <a href="https://github.com/yourdudeken" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                        <img src="icons/github.png" alt="GitHub">
+                    </a>
+                    <a href="https://linkedin.com/in/yourdudeken" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                        <img src="icons/linkedin.png" alt="LinkedIn">
+                    </a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Info</h3>
+                <p>Nairobi, Kenya</p>
+                <p>Email: kenmwendwamuthengi@gmail.com</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; <span id="year"></span> Kennedy Muthengi. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

@@ -31,4 +31,42 @@ document.querySelectorAll('.profile, .social-icons a, nav a').forEach(el => {
 document.getElementById('year').textContent = new Date().getFullYear();
 
 // Add small delay to profile animation for better effect
-document.querySelector('.profile').style.transitionDelay = '0.2s';
+if (document.querySelector('.profile')) {
+    document.querySelector('.profile').style.transitionDelay = '0.2s';
+}
+
+// Contact form handling
+if (document.getElementById('contact-form')) {
+    const form = document.getElementById('contact-form');
+    const status = document.getElementById('form-status');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const data = new FormData(form);
+        
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: data,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+            
+            if (response.ok) {
+                status.textContent = 'Message sent successfully!';
+                status.className = 'success';
+                form.reset();
+            } else {
+                throw new Error('Form submission failed');
+            }
+        } catch (error) {
+            status.textContent = 'Oops! There was a problem sending your message.';
+            status.className = 'error';
+        }
+        
+        setTimeout(() => {
+            status.style.display = 'none';
+        }, 5000);
+    });
+}
