@@ -19,7 +19,7 @@ app.use(cors());
 
 // Authentication
 const users = {
-    admin: process.env.ADMIN_PASSWORD || 'admin123' // Default password, recommend changing
+    'admin': process.env.ADMIN_PASSWORD || '1234' // Simple default credentials
 };
 
 // Apply auth only to API routes
