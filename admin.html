@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | Kennedy Muthengi</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .admin-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+        
+        .admin-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+        
+        .image-upload {
+            border: 2px dashed #ddd;
+            padding: 2rem;
+            text-align: center;
+            margin: 1rem 0;
+        }
+        
+        .content-editor {
+            width: 100%;
+            min-height: 200px;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <header role="banner">
+        <nav role="navigation" aria-label="Main navigation">
+            <div class="nav-container">
+                <a class="bio" href="index.html">Admin Panel</a>
+                <div class="nav-links">
+                    <a href="index.html">View Site</a>
+                    <a href="admin.html" aria-current="page">Dashboard</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="admin-content">
+        <div class="admin-container">
+            <h1>Website Administration</h1>
+            
+            <section class="admin-section">
+                <h2>Home Page Content</h2>
+                <div class="form-group">
+                    <label for="home-profile-text">Profile Text</label>
+                    <textarea class="content-editor" id="home-profile-text" placeholder="Enter profile introduction text" aria-label="Home profile text"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="profile-image">Profile Image</label>
+                    <div class="image-upload">
+                        <p>Drag & drop image here or click to browse</p>
+                        <input type="file" id="profile-image" accept="image/*" aria-label="Profile image upload">
+                    </div>
+                </div>
+                <button class="submit-btn">Update Home Page</button>
+            </section>
+
+            <section class="admin-section">
+                <h2>Blog Management</h2>
+                <div class="form-group">
+                    <label for="post-title">New Post Title</label>
+                    <input type="text" id="post-title" placeholder="Enter post title" aria-label="Post title">
+                </div>
+                <div class="form-group">
+                    <label for="post-content">Post Content</label>
+                    <textarea class="content-editor" id="post-content" placeholder="Write your post content here" aria-label="Post content"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="post-image">Featured Image</label>
+                    <div class="image-upload">
+                        <p>Drag & drop image here or click to browse</p>
+                        <input type="file" id="post-image" accept="image/*" aria-label="Post featured image">
+                    </div>
+                </div>
+                <button class="submit-btn">Publish Post</button>
+            </section>
+
+            <section class="admin-section">
+                <h2>About Page Content</h2>
+                <div class="form-group">
+                    <label for="about-text">About Text</label>
+                    <textarea class="content-editor" id="about-text" placeholder="Enter about page content" aria-label="About page text"></textarea>
+                </div>
+                <button class="submit-btn">Update About Page</button>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        // Update this to your hosted server URL
+        const API_URL = 'https://your-server-domain.com/api';
+        // For local testing during development only:
+        // const API_URL = 'http://localhost:5000/api';
+        let authToken = '';
+        
+        // Handle login
+        document.getElementById('login-btn').addEventListener('click', async () => {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (!username || !password) {
+                alert('Please enter both username and password');
+                return;
+            }
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Basic ' + btoa(username + ':' + password)
+                    }
+                });
+                
+                if (response.ok) {
+                    authToken = btoa(username + ':' + password);
+                    document.getElementById('login-form').style.display = 'none';
+                    document.getElementById('admin-panel').style.display = 'block';
+                } else {
+                    throw new Error('Login failed');
+                }
+            } catch (err) {
+                alert('Invalid credentials');
+                document.getElementById('password').value = '';
+            }
+        });
+
+        // API helper function with auth
+        const apiFetch = async (endpoint, options = {}) => {
+            if (!authToken) {
+                alert('Session expired. Please login again.');
+                window.location.reload();
+                return;
+            }
+            
+            const headers = {
+                'Authorization': 'Basic ' + authToken,
+                ...options.headers
+            };
+            
+            try {
+                const response = await fetch(`${API_URL}${endpoint}`, {
+                    ...options,
+                    headers
+                });
+                
+                if (response.status === 401) {
+                    throw new Error('Unauthorized');
+                }
+                
+                return await response.json();
+            } catch (err) {
+                console.error('API Error:', err);
+                throw err;
+            }
+        };
+        
+        // Home page update
+        document.querySelector('#home-section .submit-btn').addEventListener('click', async () => {
+            const text = document.getElementById('home-profile-text').value;
+            const imageFile = document.getElementById('profile-image').files[0];
+            
+            const formData = new FormData();
+            formData.append('text', text);
+            if (imageFile) formData.append('image', imageFile);
+            
+            try {
+                const result = await apiFetch('/update-home', {
+                    method: 'POST',
+                    body: formData
+                });
+                alert(result.success ? 'Home page updated!' : 'Error: ' + result.error);
+            } catch (err) {
+                alert('Failed to update home page');
+            }
+        });
+
+        // Blog post creation
+        document.querySelector('#blog-section .submit-btn').addEventListener('click', async () => {
+            const title = document.getElementById('post-title').value;
+            const content = document.getElementById('post-content').value;
+            const imageFile = document.getElementById('post-image').files[0];
+            
+            const formData = new FormData();
+            formData.append('title', title);
+            formData.append('content', content);
+            if (imageFile) formData.append('image', imageFile);
+            
+            try {
+                const result = await apiFetch('/create-post', {
+                    method: 'POST',
+                    body: formData
+                });
+                if (result.success) {
+                    alert('Blog post published!');
+                    document.getElementById('post-title').value = '';
+                    document.getElementById('post-content').value = '';
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (err) {
+                alert('Failed to publish post');
+            }
+        });
+
+        // About page update
+        document.querySelector('#about-section .submit-btn').addEventListener('click', async () => {
+            const text = document.getElementById('about-text').value;
+            
+            try {
+                const result = await apiFetch('/update-about', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ text })
+                });
+                alert(result.success ? 'About page updated!' : 'Error: ' + result.error);
+            } catch (err) {
+                alert('Failed to update about page');
+            }
+        });
+    </script>
+</body>
+</html>

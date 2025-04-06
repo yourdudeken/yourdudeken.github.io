@@ -1,0 +1,24 @@
+# Environment variables
+.env
+.env.local
+
+# Log files  
+*.log
+logs/
+
+# Dependency directories
+node_modules/
+dist/
+
+# Development files
+.idea/
+.vscode/
+*.bak
+*.swp
+
+# Uploaded files
+uploads/
+
+# OS generated files
+.DS_Store
+Thumbs.db

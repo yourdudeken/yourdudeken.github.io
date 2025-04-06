@@ -505,6 +505,24 @@ article {
     box-shadow: var(--shadow);
 }
 
+/* Login Form Styles */
+#login-form {
+    max-width: 500px;
+    text-align: center;
+}
+
+#login-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+#login-form input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: 'Inter', sans-serif;
+}
+
 /* About Page Styles */
 .about-content {
     max-width: 800px;
