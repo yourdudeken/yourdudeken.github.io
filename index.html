@@ -3,38 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PersonalBlog</title>
+    <meta name="description" content="Professional portfolio and blog of Kennedy Muthengi, web and software developer based in Nairobi, Kenya">
+    <meta name="keywords" content="web developer, software engineer, Kenya, Nairobi, JavaScript, React, Node.js">
+    <meta name="author" content="Kennedy Muthengi">
+    <meta property="og:title" content="Kennedy Muthengi | Web & Software Developer">
+    <meta property="og:description" content="Professional portfolio and blog of Kennedy Muthengi, web and software developer">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_KE">
     <link rel="stylesheet" href="styles.css">
-</head>
+    <title>Kennedy Muthengi | Web & Software Developer</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💻</text></svg>">
 <body>
-    <header>
-        <nav>
-            <a class="bio" href="#bio">Ken's Dev Blog</a>                   
-            <a href="#blog.html">Blog</a>
-            <a href="#about.html">About</a>
-            <a class="contact" href="#contact.html">Contact</a>
+    <header role="banner">
+        <nav role="navigation" aria-label="Main navigation">
+            <div class="nav-container">
+                <a class="bio" href="#bio">Ken's Dev Blog</a>
+                <div class="nav-links">
+                    <a href="#blog.html">Blog</a>
+                    <a href="#about.html">About</a>
+                    <a class="contact" href="#contact.html">Contact</a>
+                </div>
+            </div>
         </nav>
     </header>
 
-    <main>
-        <section id="bio">
+    <main role="main">
+        <section id="bio" aria-labelledby="bio-heading">
             <div class="profile">
                 <div class="text">
-                    <p>Hello I'm</p>
-                    <h1>Kennedy Muthengi</h1>
-                    <p>a dedicated web and software delevoper located in Nairobi, Kenya.</p>
-                    <div class="social-icons">
-                        <a href="#"><img src="icons/github.png" alt="Github"></a>
-                        <a href="#"><img src="icons/linkedin.png" alt="LinkedIn"></a>
-                        <a href="#"><img src="icons/instagram.png" alt="Instagram"></a>
-                        <a href="#"><img src="icons/twitter.png" alt="Twitter"></a>
+                    <div class="name-card">
+                        <p class="greeting">Hello I'm</p>
+                        <h1 id="bio-heading">Kennedy Muthengi</h1>
+                        <p class="tagline">A dedicated web and software developer located in Nairobi, Kenya.</p>
+                        <p class="brief-description">Full-stack developer specializing in:
+                            <br>- JavaScript (ES6+)
+                            <br>- React & Next.js
+                            <br>- Node.js & Express
+                            <br>- MongoDB & PostgreSQL
+                        </p>
+                    </div>
+                    <div class="social-icons" role="group" aria-label="Social media links">
+                        <a href="https://github.com/yourdudeken" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile">
+                            <img src="icons/github.png" alt="GitHub">
+                        </a>
+                        <a href="https://linkedin.com/in/yourdudeken" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile">
+                            <img src="icons/linkedin.png" alt="LinkedIn">
+                        </a>
+                        <a href="https://instagram.com/yourdudeken" target="_blank" rel="noopener noreferrer" aria-label="Instagram profile">
+                            <img src="icons/instagram.png" alt="Instagram">
+                        </a>
+                        <a href="https://twitter.com/yourdudeken" target="_blank" rel="noopener noreferrer" aria-label="Twitter profile">
+                            <img src="icons/twitter.png" alt="Twitter">
+                        </a>
                     </div>
                 </div>
                 <div class="photo">
-                    <img src="images/kennedy.jpg" alt="Kennedy Muthengi">
+                    <img src="images/kennedy.jpg" alt="Portrait of Kennedy Muthengi" loading="lazy">
                 </div>
             </div>
         </section>
     </main>
+
+    <section class="description" aria-labelledby="description-heading">
+        <div class="description-content">
+            <h2 id="description-heading">About My Work</h2>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <h3>Web Development</h3>
+                    <p>Building responsive, accessible websites with modern frameworks and best practices.</p>
+                </div>
+                <div class="skill-card">
+                    <h3>Software Engineering</h3>
+                    <p>Designing robust systems with clean architecture and maintainable code.</p>
+                </div>
+                <div class="skill-card">
+                    <h3>UI/UX Design</h3>
+                    <p>Creating intuitive interfaces focused on user experience and accessibility.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer role="contentinfo">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#bio">Home</a></li>
+                    <li><a href="#blog.html">Blog</a></li>
+                    <li><a href="#about.html">About</a></li>
+                    <li><a href="#contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Connect</h3>
+                <div class="footer-social">
+                    <a href="https://github.com/yourdudeken" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                        <img src="icons/github.png" alt="GitHub">
+                    </a>
+                    <a href="https://linkedin.com/in/yourdudeken" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                        <img src="icons/linkedin.png" alt="LinkedIn">
+                    </a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Info</h3>
+                <p>Nairobi, Kenya</p>
+                <p>Email: kenmwendwa@gmail.com</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; <span id="year"></span> Kennedy Muthengi. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
 </body>
 </html>
