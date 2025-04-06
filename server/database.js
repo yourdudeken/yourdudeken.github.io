@@ -1,7 +1,10 @@
 import { MongoClient } from 'mongodb';
 
 // Connection URI from environment variables
-const uri = process.env.MONGODB_URI || "mongodb+srv://kenmwendwamuthengi:ZBdrGYbUMwbTMMGY@cluster0.fkkscbr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const uri = process.env.MONGODB_URI;
+if (!uri) {
+    throw new Error('MONGODB_URI environment variable is required');
+}
 
 // Database Name
 const dbName = 'portfolioDB';

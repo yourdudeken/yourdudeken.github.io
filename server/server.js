@@ -1,3 +1,5 @@
+import 'dotenv/config';
+console.log('Debug - MONGODB_URI:', process.env.MONGODB_URI);
 import express from 'express';
 import multer from 'multer';
 import path from 'path';
@@ -10,7 +12,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ dest: process.env.UPLOADS_DIR || 'uploads/' });
 
 // Middleware
 app.use(cors());
