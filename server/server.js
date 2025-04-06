@@ -1,9 +1,13 @@
-const express = require('express');
-const multer = require('multer');
-const path = require('path');
-const connectDB = require('./database');
-const cors = require('cors');
-const basicAuth = require('express-basic-auth');
+import express from 'express';
+import multer from 'multer';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import connectDB from './database.js';
+import cors from 'cors';
+import basicAuth from 'express-basic-auth';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const upload = multer({ dest: 'uploads/' });
@@ -16,14 +20,12 @@ const users = {
     admin: process.env.ADMIN_PASSWORD || 'admin123' // Default password, recommend changing
 };
 
-app.use(basicAuth({
+// Apply auth only to API routes
+app.use('/api', basicAuth({
     users: users,
-    challenge: true,
+    challenge: true, 
     unauthorizedResponse: 'Unauthorized access'
 }));
-
-// Secure all admin routes
-app.use('/api', basicAuth({users: users}));
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -32,6 +34,15 @@ let db;
 (async () => {
     db = await connectDB();
 })();
+
+// Public health check endpoint
+app.get('/health', (req, res) => {
+    res.status(200).json({ 
+        status: 'healthy', 
+        timestamp: new Date(),
+        database: db ? 'connected' : 'disconnected'
+    });
+});
 
 // Admin API Routes
 app.post('/api/update-home', upload.single('image'), async (req, res) => {

@@ -1,7 +1,7 @@
-const { MongoClient } = require('mongodb');
+import { MongoClient } from 'mongodb';
 
-// Connection URI from user feedback
-const uri = "mongodb+srv://kenmwendwamuthengi:ZBdrGYbUMwbTMMGY@cluster0.fkkscbr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+// Connection URI from environment variables
+const uri = process.env.MONGODB_URI || "mongodb+srv://kenmwendwamuthengi:ZBdrGYbUMwbTMMGY@cluster0.fkkscbr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
 // Database Name
 const dbName = 'portfolioDB';
@@ -22,4 +22,4 @@ async function connectDB() {
     }
 }
 
-module.exports = connectDB;
+export default connectDB;
