@@ -345,7 +345,10 @@ class ProjectManager {
     const topics = repo.topics || []
     const primaryTopics = topics.slice(0, 3) // Show up to 3 topics
     const imageUrl = this.projectImageMap[repo.name];
-    const imageTag = imageUrl ? `<img src="${imageUrl}" alt="${repo.name} screenshot" class="project-image" loading="lazy">` : '';
+    let imageTag = imageUrl ? `<img src="${imageUrl}" alt="${repo.name} screenshot" class="project-image" loading="lazy">` : '';
+    if (repo.homepage && imageUrl) {
+      imageTag = `<a href="${repo.homepage}" target="_blank" rel="noopener noreferrer">${imageTag}</a>`;
+    }
     const cardClass = imageUrl ? 'project-card fade-in-up' : 'project-card fade-in-up no-image';
 
     return `
