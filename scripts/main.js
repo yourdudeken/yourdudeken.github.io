@@ -254,6 +254,7 @@ class ProjectManager {
       "yourdudeken.github.io": "assets/yourdudeken.github.io.png",
       "yourdudeken": "assets/yourdudeken.png",
       "cloudtodo": "assets/cloudtodo.png",
+      "public-apis": "assets/public-apis.png",
     }
 
     this.init()
