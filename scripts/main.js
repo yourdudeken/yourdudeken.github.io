@@ -250,6 +250,10 @@ class ProjectManager {
     this.githubAPI = new GitHubAPI()
     this.projectsGrid = document.getElementById("projects-grid")
     this.featuredRepoContent = document.getElementById("featured-repo-content")
+    this.projectImageMap = {
+      "yourdudeken.github.io": "assets/yourdudeken.github.io.png",
+      "cloudtodo": "assets/cloudtodo.png",
+    }
 
     this.init()
   }
@@ -339,10 +343,13 @@ class ProjectManager {
   createProjectCard(repo) {
     const topics = repo.topics || []
     const primaryTopics = topics.slice(0, 3) // Show up to 3 topics
+    const imageUrl = this.projectImageMap[repo.name];
+    const imageTag = imageUrl ? `<img src="${imageUrl}" alt="${repo.name} screenshot" class="project-image" loading="lazy">` : '';
+    const cardClass = imageUrl ? 'project-card fade-in-up' : 'project-card fade-in-up no-image';
 
     return `
-      <div class="project-card fade-in-up">
-        <img src="/assets/placeholder-project.jpg" alt="${repo.name} screenshot" class="project-image" loading="lazy">
+      <div class="${cardClass}">
+        ${imageTag}
         <div class="project-content">
           <h3 class="project-title">${repo.name}</h3>
           <p class="project-description">${repo.description || "No description available."}</p>
