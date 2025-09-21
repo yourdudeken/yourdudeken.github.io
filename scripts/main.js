@@ -252,6 +252,7 @@ class ProjectManager {
     this.featuredRepoContent = document.getElementById("featured-repo-content")
     this.projectImageMap = {
       "yourdudeken.github.io": "assets/yourdudeken.github.io.png",
+      "yourdudeken": "assets/yourdudeken.png",
       "cloudtodo": "assets/cloudtodo.png",
     }
 
