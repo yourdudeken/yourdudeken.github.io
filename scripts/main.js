@@ -252,12 +252,6 @@ class ProjectManager {
     this.githubAPI = new GitHubAPI()
     this.projectsGrid = document.getElementById("projects-grid")
     this.featuredRepoContent = document.getElementById("featured-repo-content")
-    this.projectImageMap = {
-      "yourdudeken.github.io": "assets/yourdudeken.github.io.png",
-      "yourdudeken": "assets/yourdudeken.png",
-      "cloudtodo": "assets/cloudtodo.png",
-      "public-apis": "assets/public-apis.png",
-    }
 
     this.init()
   }
