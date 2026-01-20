@@ -79,7 +79,9 @@ class ThemeManager {
 
   updateThemeIcon(theme) {
     if (this.themeIcon) {
-      this.themeIcon.textContent = theme === "dark" ? "☀️" : "🌙"
+      const sunIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sun"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
+      const moonIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-moon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
+      this.themeIcon.innerHTML = theme === "dark" ? sunIcon : moonIcon;
     }
   }
 
@@ -214,7 +216,7 @@ class GitHubAPI {
       return CONFIG.github.fallbackProjects
     }
 
-    const url = `${this.baseUrl}/users/${this.username}/repos?sort=updated&per_page=6`
+    const url = `${this.baseUrl}/users/${this.username}/repos?sort=updated&per_page=100`
     const repos = await this.fetchWithCache(url, "repositories")
 
     return repos || CONFIG.github.fallbackProjects
@@ -288,23 +290,22 @@ class ProjectManager {
         <p>${repo.description || "No description available."}</p>
         ${repo.language ? `<span class="repo-language">${repo.language}</span>` : ""}
         <div class="repo-stats">
-          <span>⭐ ${repo.stargazers_count || 0}</span>
-          <span>🍴 ${repo.forks_count || 0}</span>
-          <span>📅 Updated ${updatedDate}</span>
+          <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-star" style="vertical-align: text-bottom; margin-right: 4px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> ${repo.stargazers_count || 0}</span>
+          <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-git-branch" style="vertical-align: text-bottom; margin-right: 4px;"><line x1="6" y1="3" x2="6" y2="15"></line><circle cx="18" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle><path d="M18 9a9 9 0 0 1-9 9"></path></svg> ${repo.forks_count || 0}</span>
+          <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar" style="vertical-align: text-bottom; margin-right: 4px;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> Updated ${updatedDate}</span>
         </div>
         <div class="project-actions">
           <a href="${repo.html_url}" class="btn btn-small btn-primary" target="_blank" rel="noopener noreferrer">
             View on GitHub
           </a>
-          ${
-            repo.homepage
-              ? `
+          ${repo.homepage
+        ? `
             <a href="${repo.homepage}" class="btn btn-small btn-secondary" target="_blank" rel="noopener noreferrer">
               Live Demo
             </a>
           `
-              : ""
-          }
+        : ""
+      }
         </div>
       </div>
     `
@@ -330,7 +331,7 @@ class ProjectManager {
     try {
       const repos = await this.githubAPI.getRepositories()
       if (repos && repos.length > 0) {
-        this.renderProjects(repos.slice(0, 6)) // Show up to 6 projects
+        this.renderProjects(repos) // Show all projects
       }
     } catch (error) {
       console.error("Error loading projects:", error)
@@ -345,16 +346,8 @@ class ProjectManager {
   createProjectCard(repo) {
     const topics = repo.topics || []
     const primaryTopics = topics.slice(0, 3) // Show up to 3 topics
-    const imageUrl = this.projectImageMap[repo.name];
-    let imageTag = imageUrl ? `<img src="${imageUrl}" alt="${repo.name} screenshot" class="project-image" loading="lazy">` : '';
-    if (repo.homepage && imageUrl) {
-      imageTag = `<a href="${repo.homepage}" target="_blank" rel="noopener noreferrer">${imageTag}</a>`;
-    }
-    const cardClass = imageUrl ? 'project-card fade-in-up' : 'project-card fade-in-up no-image';
-
     return `
-      <div class="${cardClass}">
-        ${imageTag}
+      <div class="project-card fade-in-up">
         <div class="project-content">
           <h3 class="project-title">${repo.name}</h3>
           <p class="project-description">${repo.description || "No description available."}</p>
@@ -366,15 +359,14 @@ class ProjectManager {
             <a href="${repo.html_url}" class="btn btn-small" target="_blank" rel="noopener noreferrer">
               View on GitHub
             </a>
-            ${
-              repo.homepage
-                ? `
+            ${repo.homepage
+        ? `
               <a href="${repo.homepage}" class="btn btn-small btn-secondary" target="_blank" rel="noopener noreferrer">
                 Live Demo
               </a>
             `
-                : ""
-            }
+        : ""
+      }
           </div>
         </div>
       </div>
