@@ -203,6 +203,14 @@ button {
   transform: scale(1.05);
 }
 
+.theme-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
 /* ===== NAVIGATION ===== */
 .nav {
   position: fixed;
@@ -258,6 +266,21 @@ button {
 
   .nav-links {
     gap: var(--space-8);
+  }
+}
+
+@media (max-width: 640px) {
+  .nav-container {
+    padding: 0 var(--space-3);
+  }
+
+  .nav-links {
+    gap: var(--space-2);
+  }
+
+  .nav-link {
+    font-size: var(--font-size-sm);
+    padding: var(--space-2);
   }
 }
 
@@ -400,7 +423,13 @@ button {
 
 /* ===== SECTION STYLES ===== */
 section {
-  padding: var(--space-20) 0;
+  padding: var(--space-12) 0;
+}
+
+@media (min-width: 768px) {
+  section {
+    padding: var(--space-20) 0;
+  }
 }
 
 .section-title {
@@ -674,6 +703,7 @@ section {
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -686,6 +716,7 @@ section {
 
 /* ===== PRINT STYLES ===== */
 @media print {
+
   .theme-toggle,
   .nav,
   .hero-actions,
@@ -719,6 +750,7 @@ section {
 
 /* ===== REDUCED MOTION ===== */
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
