@@ -288,12 +288,13 @@ h6 {
   top: 0;
   left: 0;
   right: 0;
-  background: rgba(255, 255, 255, 0.05);
-  /* Very slight tint */
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.7);
+  /* More opaque for visibility */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--glass-border);
-  z-index: 100;
+  z-index: 1000;
+  /* Increased z-index */
   transition: all var(--transition-normal);
   height: 80px;
   display: flex;
@@ -301,7 +302,7 @@ h6 {
 }
 
 [data-theme="dark"] .nav {
-  background: rgba(15, 23, 42, 0.4);
+  background: rgba(15, 23, 42, 0.7);
 }
 
 .nav.scrolled {
@@ -317,15 +318,20 @@ h6 {
   padding: 0 var(--space-4);
   display: flex;
   justify-content: center;
-  /* Center links */
   align-items: center;
   position: relative;
+  height: 100%;
+  /* Ensure alignment works */
 }
 
 /* Position theme toggle absolutely to the right */
 .nav-container>.theme-toggle {
   position: absolute;
-  right: 20px;
+  right: var(--space-4);
+  /* Match container padding */
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1002;
 }
 
 .nav-links {
@@ -337,6 +343,8 @@ h6 {
   border-radius: 9999px;
   border: 1px solid var(--glass-border);
   box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal);
+  /* Smooth transition for hiding/showing */
 }
 
 .nav-link {
@@ -347,6 +355,8 @@ h6 {
   padding: var(--space-2) var(--space-5);
   border-radius: 9999px;
   font-size: var(--font-size-sm);
+  white-space: nowrap;
+  /* Prevent breaking */
 }
 
 .nav-link:hover {
@@ -361,23 +371,36 @@ h6 {
 }
 
 @media (max-width: 768px) {
+  .nav {
+    height: 60px;
+    /* Smaller header on mobile */
+  }
+
+  .nav.scrolled {
+    height: 60px;
+    /* Maintain small size on scroll */
+  }
+
   .nav-links {
-    display: none;
-    /* Mobile menu needed, hiding for now or simplify */
-    /* For simplicity in this iteration, we keep it visible but smaller */
-    display: flex;
-    overflow-x: auto;
     position: fixed;
     bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
-    width: 90%;
-    max-width: 400px;
-    z-index: 101;
-    background: var(--glass-bg);
-    backdrop-filter: blur(16px);
-    border: 1px solid var(--glass-border);
+    width: auto;
+    /* Auto width based on content */
+    max-width: 95%;
+    z-index: 1001;
+    background: rgba(255, 255, 255, 0.9);
+    /* More solid for bottom bar */
+    border: 1px solid var(--color-border);
+    padding: var(--space-2);
+    box-shadow: var(--shadow-lg);
+    gap: var(--space-1);
     justify-content: space-between;
+  }
+
+  [data-theme="dark"] .nav-links {
+    background: rgba(15, 23, 42, 0.9);
   }
 
   .nav-container {
@@ -386,8 +409,24 @@ h6 {
   }
 
   .nav-link {
-    padding: var(--space-3);
-    font-size: var(--font-size-xs);
+    padding: var(--space-2) var(--space-3);
+    font-size: 0.7rem;
+    /* Smaller font for mobile menu */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Adjust toggle for smaller header */
+  .theme-toggle {
+    width: 36px;
+    height: 36px;
+    font-size: var(--font-size-sm);
+  }
+
+  .theme-toggle:hover {
+    transform: translateY(-50%) rotate(15deg) scale(1.1);
+    /* Keeps centered Y */
   }
 }
 
@@ -534,8 +573,9 @@ h6 {
 }
 
 .hero-avatar {
-  width: 160px;
-  height: 160px;
+  width: clamp(120px, 20vw, 160px);
+  /* Responsive avatar size */
+  height: clamp(120px, 20vw, 160px);
   border-radius: 50%;
   margin: 0 auto var(--space-8);
   border: 4px solid rgba(255, 255, 255, 0.2);
@@ -550,7 +590,8 @@ h6 {
 }
 
 .hero-title {
-  font-size: var(--font-size-5xl);
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  /* Responsive typography */
   font-weight: var(--font-weight-extrabold);
   margin-bottom: var(--space-6);
   background: linear-gradient(135deg, var(--color-text-primary) 30%, var(--color-primary));
@@ -558,10 +599,11 @@ h6 {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   letter-spacing: -0.02em;
+  line-height: 1.1;
 }
 
 .hero-tagline {
-  font-size: var(--font-size-xl);
+  font-size: clamp(1rem, 2vw, 1.25rem);
   color: var(--color-text-secondary);
   margin-bottom: var(--space-10);
   line-height: var(--line-height-relaxed);
@@ -569,6 +611,7 @@ h6 {
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
+  padding: 0 var(--space-4);
 }
 
 .hero-actions {
@@ -578,26 +621,22 @@ h6 {
   flex-wrap: wrap;
 }
 
-@media (max-width: 768px) {
-  .hero-title {
-    font-size: 3rem;
-  }
-
-  .hero-avatar {
-    width: 120px;
-    height: 120px;
-  }
-}
-
 /* ===== SECTION STYLES ===== */
 section {
   padding: var(--space-20) 0;
   position: relative;
 }
 
+@media (max-width: 768px) {
+  section {
+    padding: var(--space-12) 0;
+    /* Less padding on mobile */
+  }
+}
+
 .section-title {
   font-family: var(--font-family-display);
-  font-size: var(--font-size-3xl);
+  font-size: clamp(2rem, 4vw, 2.5rem);
   font-weight: var(--font-weight-bold);
   text-align: center;
   margin-bottom: var(--space-16);
@@ -606,6 +645,8 @@ section {
   display: inline-block;
   left: 50%;
   transform: translateX(-50%);
+  width: 100%;
+  /* Ensure full width text alignment */
 }
 
 .section-title::after {
@@ -700,6 +741,9 @@ section {
   transition: all var(--transition-normal);
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
 }
 
 .featured-repo-card::before {
@@ -718,10 +762,17 @@ section {
   border-color: rgba(99, 102, 241, 0.3);
 }
 
+@media (max-width: 640px) {
+  .featured-repo-card {
+    padding: var(--space-6);
+    /* Reduce padding on mobile */
+  }
+}
+
 .repo-card h3 {
-  font-size: var(--font-size-2xl);
+  font-size: clamp(1.5rem, 3vw, 2rem);
   font-weight: var(--font-weight-bold);
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-2);
   color: var(--color-primary);
 }
 
@@ -919,7 +970,8 @@ section {
 .contact-links {
   display: flex;
   justify-content: center;
-  gap: var(--space-8);
+  gap: var(--space-6);
+  /* Adjusted space for better responsive wrap */
   flex-wrap: wrap;
 }
 
@@ -934,7 +986,11 @@ section {
   color: var(--color-text-secondary);
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
-  width: 120px;
+  min-width: 140px;
+  /* Enhanced minimum width */
+  flex: 1 1 auto;
+  /* Allow growth */
+  max-width: 200px;
 }
 
 .contact-link:hover {
@@ -957,6 +1013,8 @@ section {
   border-top: 1px solid var(--color-border);
   padding: var(--space-12) 0;
   text-align: center;
+  position: relative;
+  z-index: 10;
 }
 
 .footer p {
