@@ -219,7 +219,10 @@ class GitHubAPI {
     const url = `${this.baseUrl}/users/${this.username}/repos?sort=updated&per_page=100`
     const repos = await this.fetchWithCache(url, "repositories")
 
-    return repos || CONFIG.github.fallbackProjects
+    if (!repos) return CONFIG.github.fallbackProjects
+
+    // Filter out forked repositories
+    return repos.filter(repo => !repo.fork) || CONFIG.github.fallbackProjects
   }
 
   async getFeaturedRepository() {
@@ -234,6 +237,12 @@ class GitHubAPI {
 
     // Get the most recently updated repository
     return repos[0]
+  }
+
+  stripEmojis(text) {
+    if (!text) return ""
+    // Regex to match emojis and some other special characters that render as emojis
+    return text.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1F1E6}-\u{1F1FF}]/gu, '')
   }
 
   formatDate(dateString) {
@@ -276,12 +285,13 @@ class ProjectManager {
   }
 
   renderFeaturedRepository(repo) {
-    const updatedDate = repo.updated_at ? this.githubAPI.formatDate(repo.updated_at) : "Recently"
+    const name = this.githubAPI.stripEmojis(repo.name)
+    const description = this.githubAPI.stripEmojis(repo.description || "No description available.")
 
     this.featuredRepoContent.innerHTML = `
       <div class="repo-card">
-        <h3>${repo.name}</h3>
-        <p>${repo.description || "No description available."}</p>
+        <h3>${name}</h3>
+        <p>${description}</p>
         ${repo.language ? `<span class="repo-language">${repo.language}</span>` : ""}
         <div class="repo-stats">
           <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-star" style="vertical-align: text-bottom; margin-right: 4px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> ${repo.stargazers_count || 0}</span>
@@ -339,12 +349,15 @@ class ProjectManager {
 
   createProjectCard(repo) {
     const topics = repo.topics || []
-    const primaryTopics = topics.slice(0, 3) // Show up to 3 topics
+    const primaryTopics = topics.slice(0, 3)
+    const name = this.githubAPI.stripEmojis(repo.name)
+    const description = this.githubAPI.stripEmojis(repo.description || "No description available.")
+
     return `
       <div class="project-card fade-in-up">
         <div class="project-content">
-          <h3 class="project-title">${repo.name}</h3>
-          <p class="project-description">${repo.description || "No description available."}</p>
+          <h3 class="project-title">${name}</h3>
+          <p class="project-description">${description}</p>
           <div class="project-tech">
             ${repo.language ? `<span class="tech-tag">${repo.language}</span>` : ""}
             ${primaryTopics.map((topic) => `<span class="tech-tag">${topic}</span>`).join("")}
