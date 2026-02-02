@@ -1,87 +1,85 @@
-# Personal Portfolio Website
+# Ken | Full-Stack Developer Portfolio
 
 ![Portfolio Screenshot](assets/ken-photo.jpeg)
 
-A clean, responsive, and customizable personal portfolio website built with vanilla HTML, CSS, and JavaScript. It features a light/dark theme toggle and fetches repository data from the GitHub API.
+A premium, responsive, and highly customizable personal portfolio website. Built with precision using vanilla HTML, CSS, and JavaScript, this project showcases a modern aesthetic with advanced dynamic integrations.
 
 **[Live Demo](https://yourdudeken.github.io)**
 
 ---
 
-## Features
+## Technical Highlights
 
-- **Responsive Design**: Looks great on all devices, from mobile to desktop.
-- **Light/Dark Theme**: Switch between light and dark modes.
-- **GitHub API Integration**: Automatically fetches and displays your GitHub repositories.
-- **SEO Optimized**: Basic SEO enhancements for better search engine visibility.
-- **Accessibility**: Built with accessibility in mind.
+- **Premium UI/UX**: Features a vibrant design system using Indigo, Sky, and Violet palettes. Includes advanced glassmorphism effects, smooth micro-animations, and custom-tuned transitions.
+- **Floating Navigation**: A custom-engineered floating pill navigation system that remains responsive across all screen sizes.
+- **Intelligent GitHub Integration**: 
+    - Real-time fetching of repository data via GitHub API.
+    - Automatic filtering to exclude forks/clones and specific meta-repositories.
+    - Smart sorting by latest pushed activity to prioritize current work.
+    - Automated emoji stripping for a clean, professional text-only interface.
+- **SEO & Performance**: Optimized with descriptive meta tags, semantic HTML5 structure, and minimal external dependencies for lightning-fast load times.
+- **Technical Notes**: A curated section highlighting deep technical expertise in Networking, Backend Service Architecture, and System Design.
 
 ---
 
 ## Getting Started
 
-Follow these instructions to get a copy of the project up and running on your local machine for development and testing purposes.
-
 ### Prerequisites
 
-You don't need any special tools. A modern web browser and a code editor are all you need.
+This project is built with zero dependencies. You only need a modern web browser and a text editor.
 
-### Installation & Setup
+### Installation and Setup
 
-1.  **Fork the repository** or create a new repository named `your-username.github.io`.
-2.  **Clone the repository**:
-    ```bash
-    git clone https://github.com/yourdudeken/yourdudeken.github.io.git
-    ```
-3.  **Navigate to the project directory**:
-    ```bash
-    cd yourdudeken.github.io
-    ```
-4.  **Customize the content**:
-    -   **Update personal info in `index.html`**: Change the name, tagline, bio, skills, and contact links.
-    -   **Update GitHub username in `scripts/main.js`**:
-        ```javascript
-        const CONFIG = {
-          github: {
-            username: "yourdudeken" // Replace with your GitHub username
-          }
-        }
-        ```
-    -   **Replace images in the `assets/` folder**:
-        -   `ken-photo.jpeg`: Your profile picture.
-5.  **Deploy to GitHub Pages**:
-    -   Push your changes to the `main` branch.
-    -   Go to your repository's settings.
-    -   Under the "Pages" section, select the `main` branch as the source.
-    -   Your portfolio will be live at `https://your-username.github.io`.
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/yourdudeken/yourdudeken.github.io.git
+   ```
+
+2. **Configure your identity**:
+   Update your details in `index.html` including name, bio, and technical expertise.
+
+3. **Set your GitHub profile**:
+   In `scripts/main.js`, update the username in the configuration object:
+   ```javascript
+   const CONFIG = {
+     github: {
+       username: "yourdudeken"
+     }
+   }
+   ```
+
+4. **Deployment**:
+   Push your changes to the `main` branch. GitHub Pages will automatically deploy your site from the repository root.
 
 ---
 
-## File Structure
+## Architecture and File Structure
 
 ```
 yourdudeken.github.io/
-├── index.html              # Main HTML file
+├── index.html              # Core structure and SEO metadata
 ├── styles/
-│   └── main.css            # Main stylesheet
+│   └── main.css            # Custom CSS3 theme with glassmorphism logic
 ├── scripts/
-│   └── main.js             # Main JavaScript file
+│   └── main.js             # JavaScript Engine (GitHub API, UI logic, animations)
 ├── assets/
-│   └── ken-photo.jpeg      # Profile picture
-└── README.md               # This file
+│   └── ken-photo.jpeg      # Profile assets
+└── README.md               # Documentation
 ```
 
 ---
 
-## Built With
+## Technical Stack
 
--   **HTML5**
--   **CSS3**
--   **Vanilla JavaScript**
+- **HTML5**: Semantic document structure.
+- **CSS3**: Advanced layouts (Grid/Flexbox) and theme variables.
+- **Vanilla JavaScript**: Dynamic project rendering and intersection observers for animations.
 
 ---
 
-## Connect with me
+## Contact and Interaction
+
+I am always open to discussing new technical challenges and collaborative opportunities.
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/kennedy-wanjau/)
 [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/yourdudeken)
@@ -89,6 +87,6 @@ yourdudeken.github.io/
 
 ---
 
-## Profile Views
+## Statistics
 
 ![Profile Views](https://komarev.com/ghpvc/?username=yourdudeken&style=flat-square&color=blue)
