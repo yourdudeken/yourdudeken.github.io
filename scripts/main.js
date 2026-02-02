@@ -154,7 +154,20 @@ class NavigationManager {
   }
 
   updateActiveNavLink() {
-    const scrollY = window.scrollY + 100
+    const scrollY = window.scrollY + 150 // Increased offset for better trigger
+    const windowHeight = window.innerHeight
+    const documentHeight = document.documentElement.scrollHeight
+
+    // special check for bottom of page
+    if (window.scrollY + windowHeight >= documentHeight - 20) {
+      this.navLinks.forEach((link) => {
+        link.classList.remove("active")
+        if (link.getAttribute("href") === "#contact") {
+          link.classList.add("active")
+        }
+      })
+      return
+    }
 
     this.sections.forEach((section) => {
       const sectionTop = section.offsetTop
@@ -216,7 +229,7 @@ class GitHubAPI {
       return CONFIG.github.fallbackProjects
     }
 
-    const url = `${this.baseUrl}/users/${this.username}/repos?sort=updated&per_page=100`
+    const url = `${this.baseUrl}/users/${this.username}/repos?sort=pushed&per_page=100`
     const repos = await this.fetchWithCache(url, "repositories")
 
     if (!repos) return CONFIG.github.fallbackProjects
@@ -287,6 +300,7 @@ class ProjectManager {
   renderFeaturedRepository(repo) {
     const name = this.githubAPI.stripEmojis(repo.name)
     const description = this.githubAPI.stripEmojis(repo.description || "No description available.")
+    const updatedDate = repo.updated_at ? this.githubAPI.formatDate(repo.updated_at) : "Recently"
 
     this.featuredRepoContent.innerHTML = `
       <div class="repo-card">

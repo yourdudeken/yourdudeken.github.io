@@ -349,36 +349,65 @@ h6 {
 
 @media (max-width: 768px) {
   .nav {
+    top: var(--space-4);
+    left: var(--space-4);
+    right: var(--space-4);
+    width: calc(100% - (var(--space-4) * 2));
     height: 64px;
+    border-radius: 9999px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--space-4);
+  }
+
+  .nav.scrolled {
+    top: var(--space-2);
+    height: 60px;
   }
 
   .nav-links {
-    position: fixed;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: auto;
-    max-width: 90%;
-    z-index: 1001;
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-    padding: var(--space-2);
-    box-shadow: var(--shadow-lg);
+    position: static;
+    transform: none;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
     gap: var(--space-1);
-    border-radius: 9999px;
+    display: flex;
+    width: auto;
   }
 
   [data-theme="dark"] .nav-links {
-    background: rgba(15, 15, 15, 0.9);
+    background: transparent;
   }
 
   .nav-container {
-    justify-content: flex-end;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    justify-content: space-between;
   }
 
   .nav-link {
-    padding: var(--space-2) var(--space-4);
-    font-size: 0.75rem;
+    padding: var(--space-2) var(--space-3);
+    font-size: 0.7rem;
+    background: transparent;
+  }
+
+  .nav-link.active {
+    background: var(--color-primary);
+  }
+
+  /* Position theme toggle relative to floating bar */
+  .nav-container>.theme-toggle {
+    position: static;
+    transform: none;
+    width: 36px;
+    height: 36px;
   }
 }
 
@@ -387,7 +416,7 @@ h6 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-3.5) var(--space-8);
+  padding: var(--space-4) var(--space-10);
   border-radius: 9999px;
   font-family: var(--font-family-display);
   font-weight: var(--font-weight-semibold);
@@ -900,7 +929,7 @@ section {
 .contact-links {
   display: flex;
   justify-content: center;
-  gap: var(--space-4);
+  gap: var(--space-6);
   flex-wrap: wrap;
 }
 
@@ -908,7 +937,7 @@ section {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-4) var(--space-8);
+  padding: var(--space-5) var(--space-10);
   border-radius: 9999px;
   transition: all var(--transition-normal);
   color: var(--color-text-primary);
@@ -916,6 +945,7 @@ section {
   border: 1px solid var(--color-border);
   font-weight: var(--font-weight-semibold);
   font-family: var(--font-family-display);
+  box-shadow: var(--shadow-sm);
 }
 
 .contact-link:hover {
