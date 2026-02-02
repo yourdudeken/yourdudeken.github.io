@@ -234,8 +234,8 @@ class GitHubAPI {
 
     if (!repos) return CONFIG.github.fallbackProjects
 
-    // Filter out forked repositories
-    return repos.filter(repo => !repo.fork) || CONFIG.github.fallbackProjects
+    // Filter out forked repositories and the main profile/portfolio repos
+    return repos.filter(repo => !repo.fork && repo.name !== 'yourdudeken' && repo.name !== 'yourdudeken.github.io') || CONFIG.github.fallbackProjects
   }
 
   async getFeaturedRepository() {
