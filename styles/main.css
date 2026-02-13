@@ -360,8 +360,7 @@ h6 {
     box-shadow: var(--shadow-lg);
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 var(--space-4);
+    padding: 0 var(--space-2);
   }
 
   .nav.scrolled {
@@ -376,9 +375,10 @@ h6 {
     border: none;
     box-shadow: none;
     padding: 0;
-    gap: var(--space-1);
     display: flex;
-    width: auto;
+    width: 100%;
+    justify-content: space-evenly;
+    align-items: center;
   }
 
   [data-theme="dark"] .nav-links {
@@ -389,13 +389,18 @@ h6 {
     width: 100%;
     margin: 0;
     padding: 0;
-    justify-content: space-between;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .nav-link {
     padding: var(--space-2) var(--space-3);
     font-size: 0.7rem;
     background: transparent;
+    flex: 1;
+    text-align: center;
+    border-radius: 9999px;
   }
 
   .nav-link.active {
