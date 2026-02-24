@@ -57,8 +57,25 @@
                         <input type="text" id="author" placeholder="Your name" value="Admin">
                     </div>
                     <div class="form-group">
-                        <label for="content">Content</label>
+                        <label for="tags">Tags (comma separated)</label>
+                        <input type="text" id="tags" placeholder="tech, lifestyle, news">
+                    </div>
+                    <div class="form-group">
+                        <label for="excerpt">Excerpt / Summary</label>
+                        <textarea id="excerpt" placeholder="Brief summary of the post..."
+                            style="min-height: 80px;"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="content">Content (Supports Markdown or HTML)</label>
                         <textarea id="content" placeholder="Write your story here..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select id="status"
+                            style="width: 100%; padding: 1rem; background: var(--bg-dark); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white;">
+                            <option value="published">Published</option>
+                            <option value="draft">Draft</option>
+                        </select>
                     </div>
                     <div class="form-actions">
                         <button type="button" class="btn btn-secondary close-modal-btn">Cancel</button>
