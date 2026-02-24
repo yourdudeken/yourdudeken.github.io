@@ -1,9 +1,0 @@
-{
-    "id": "2",
-    "title": "mpesa",
-    "category": "Backend",
-    "readTime": "7 min read",
-    "excerpt": "A comprehensive PHP package for integrating with Safaricom's M-Pesa DARAJA API.",
-    "content": "# mpesa\n\nA comprehensive PHP package for integrating with Safaricom's M-Pesa DARAJA API.\n\n## Support\n- STK Push\n- B2C Payments\n- Transaction Status",
-    "date": "2026-02-10"
-}
