@@ -1,0 +1,9 @@
+{
+    "id": "3",
+    "title": "photoapp",
+    "category": "System Design",
+    "readTime": "8 min read",
+    "excerpt": "A self-hosted photo and video capture application with a modern, containerized architecture.",
+    "content": "# photoapp\n\nA self-hosted photo and video capture application with a modern, containerized architecture.",
+    "date": "2026-01-20"
+}

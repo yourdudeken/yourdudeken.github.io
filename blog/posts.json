@@ -1,0 +1,26 @@
+[
+    {
+        "id": "wg-gateway",
+        "title": "wg-gateway",
+        "category": "Networking",
+        "readTime": "5 min read",
+        "excerpt": "Automate exposing your home server behind CGNAT/4G through a VPS with a public IP.",
+        "date": "2026-02-15"
+    },
+    {
+        "id": "mpesa",
+        "title": "mpesa",
+        "category": "Backend",
+        "readTime": "7 min read",
+        "excerpt": "A comprehensive PHP package for integrating with Safaricom's M-Pesa DARAJA API.",
+        "date": "2026-02-10"
+    },
+    {
+        "id": "photoapp",
+        "title": "photoapp",
+        "category": "System Design",
+        "readTime": "8 min read",
+        "excerpt": "A self-hosted photo and video capture application with a modern, containerized architecture.",
+        "date": "2026-01-20"
+    }
+]

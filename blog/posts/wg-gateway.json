@@ -1,0 +1,9 @@
+{
+    "id": "1",
+    "title": "wg-gateway",
+    "category": "Networking",
+    "readTime": "5 min read",
+    "excerpt": "Automate exposing your home server behind CGNAT/4G through a VPS with a public IP.",
+    "content": "# wg-gateway\n\nAutomate exposing your home server behind CGNAT/4G through a VPS with a public IP.\n\n## Features\n- WireGuard based\n- Automatic port forwarding\n- Lightweight",
+    "date": "2026-02-15"
+}

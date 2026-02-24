@@ -69,6 +69,30 @@ yourdudeken.github.io/
 
 ---
 
+## Blog Management (Owner Only)
+
+To protect the blog and ensure only you can manage posts, the CRUD interface is restricted to `localhost`.
+
+### How to add/edit posts:
+
+1. **Start the Dev Server**:
+   ```bash
+   node blog/server.js
+   ```
+2. **Manage Posts**:
+   Navigate to `http://localhost:8080/blog/index.html`. You will see "New Post", "Edit", and "Delete" buttons.
+3. **Sync to GitHub**:
+   After making changes, common logic applies:
+   ```bash
+   git add blog/posts.json blog/posts/*.json
+   git commit -m "Update blog posts"
+   git push
+   ```
+
+The public site on GitHub Pages will automatically fetch the new JSON files but will **not** show the management buttons.
+
+---
+
 ## Technical Stack
 
 - **HTML5**: Semantic document structure.

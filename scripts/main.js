@@ -121,16 +121,20 @@ class NavigationManager {
     // Smooth scrolling for navigation links
     this.navLinks.forEach((link) => {
       link.addEventListener("click", (e) => {
-        e.preventDefault()
-        const targetId = link.getAttribute("href")
-        const targetSection = document.querySelector(targetId)
+        const href = link.getAttribute("href")
 
-        if (targetSection) {
-          const offsetTop = targetSection.offsetTop - 80 // Account for fixed nav
-          window.scrollTo({
-            top: offsetTop,
-            behavior: "smooth",
-          })
+        // Only handle smooth scroll for internal hash links
+        if (href.startsWith("#")) {
+          e.preventDefault()
+          const targetSection = document.querySelector(href)
+
+          if (targetSection) {
+            const offsetTop = targetSection.offsetTop - 80 // Account for fixed nav
+            window.scrollTo({
+              top: offsetTop,
+              behavior: "smooth",
+            })
+          }
         }
       })
     })
@@ -157,6 +161,21 @@ class NavigationManager {
     const scrollY = window.scrollY + 150 // Increased offset for better trigger
     const windowHeight = window.innerHeight
     const documentHeight = document.documentElement.scrollHeight
+    const currentPath = window.location.pathname
+    const isBlogPage = currentPath.includes('/blog/')
+
+    // If we are on the blog page, the Blog link should remain active
+    if (isBlogPage) {
+      this.navLinks.forEach(link => {
+        const href = link.getAttribute('href')
+        link.classList.remove('active')
+        // Match 'index.html' inside blog folder or explicit blog path
+        if (href === 'index.html' || href.includes('blog/index.html') || href === '/blog/') {
+          link.classList.add('active')
+        }
+      })
+      return
+    }
 
     // special check for bottom of page
     if (window.scrollY + windowHeight >= documentHeight - 20) {
@@ -177,7 +196,8 @@ class NavigationManager {
       if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
         this.navLinks.forEach((link) => {
           link.classList.remove("active")
-          if (link.getAttribute("href") === `#${sectionId}`) {
+          const href = link.getAttribute("href")
+          if (href === `#${sectionId}` || (sectionId === 'blog' && href === 'blog/index.html')) {
             link.classList.add("active")
           }
         })
