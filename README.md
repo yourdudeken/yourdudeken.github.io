@@ -49,7 +49,22 @@ This project is built with zero dependencies. You only need a modern web browser
    ```
 
 4. **Deployment**:
-   Push your changes to the `main` branch. GitHub Pages will automatically deploy your site from the repository root.
+   Push your changes to the `main` branch. A GitHub Action will automatically:
+   - Inject your **Pulsiveblog API Key** from GitHub Secrets.
+   - Deploy the build to the `gh-pages` branch.
+
+### Managing Secrets
+To securely manage your **Pulsiveblog API Key**:
+1. Go to your GitHub Repository **Settings** > **Secrets and variables** > **Actions**.
+2. Click **New repository secret**.
+3. Name: `PULSIVEBLOG_API_KEY`.
+4. Value: Your private API key (starts with `pb_`).
+
+### GitHub Pages Setup
+Since we now use an automated build process:
+1. Go to Your Repo **Settings** > **Pages**.
+2. Under **Build and deployment** > **Branch**, select `gh-pages` and `/ (root)`.
+3. Save.
 
 ---
 

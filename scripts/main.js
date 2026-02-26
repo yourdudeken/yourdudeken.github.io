@@ -39,6 +39,10 @@ const CONFIG = {
       },
     ],
   },
+  pulsiveblog: {
+    apiUrl: "https://pulsiveblog.vercel.app/api/v1",
+    apiKey: "{{PULSIVEBLOG_API_KEY}}"
+  },
   animations: {
     observerOptions: {
       threshold: 0.1,
@@ -399,6 +403,100 @@ class ProjectManager {
   }
 }
 
+// ===== BLOG MANAGER =====
+class BlogManager {
+  constructor() {
+    this.blogGrid = document.getElementById("blog-grid")
+    this.apiUrl = CONFIG.pulsiveblog.apiUrl
+    this.apiKey = CONFIG.pulsiveblog.apiKey
+
+    this.init()
+  }
+
+  async init() {
+    if (!this.blogGrid) return
+    await this.loadBlogs()
+  }
+
+  async loadBlogs() {
+    try {
+      // Clear current content (except noscript)
+      const noscript = this.blogGrid.querySelector('noscript');
+      this.blogGrid.innerHTML = '';
+      if (noscript) this.blogGrid.appendChild(noscript);
+
+      // Fetch all published posts
+      const response = await fetch(`${this.apiUrl}/posts?api_key=${this.apiKey}&status=published`)
+      if (response.ok) {
+        const data = await response.json()
+        const posts = data.posts || []
+
+        if (posts.length === 0) {
+          this.renderBlogsFallback("No technical notes found yet. Check back soon!")
+          return
+        }
+
+        posts.forEach(post => {
+          this.renderBlogPost(post)
+        })
+      } else {
+        throw new Error(`API error: ${response.status}`)
+      }
+    } catch (error) {
+      console.error("Error loading blogs from Pulsiveblog:", error)
+      this.renderBlogsFallback("Unable to load technical notes at this time.")
+    }
+  }
+
+  renderBlogsFallback(message) {
+    this.blogGrid.insertAdjacentHTML('beforeend', `
+      <div class="blog-card" style="grid-column: 1 / -1; text-align: center; border-style: dashed; opacity: 0.7;">
+        <div class="blog-content">
+          <p class="blog-excerpt">${message}</p>
+        </div>
+      </div>
+    `)
+  }
+
+  renderBlogPost(post, prepend = false) {
+    const card = this.createBlogCard(post)
+    if (prepend) {
+      this.blogGrid.insertAdjacentHTML('afterbegin', card)
+    } else {
+      this.blogGrid.insertAdjacentHTML('beforeend', card)
+    }
+  }
+
+  createBlogCard(post) {
+    // Format date if available
+    const date = post.createdAt ? new Date(post.createdAt).toLocaleDateString('en-US', {
+      month: 'short',
+      year: 'numeric'
+    }) : 'Recent'
+
+    // Get primary tag
+    const tag = post.tags && post.tags.length > 0 ? post.tags[0] : 'Tech'
+
+    // Estimate read time (rough: 200 words per minute)
+    const wordCount = post.content ? post.content.split(/\s+/).length : 500
+    const readTime = Math.max(1, Math.ceil(wordCount / 200))
+
+    return `
+      <article class="blog-card fade-in-up">
+        <div class="blog-content">
+          <div class="blog-meta">
+            <span class="blog-date">${tag}</span>
+            <span class="read-time">${readTime} min read</span>
+          </div>
+          <h3 class="blog-title">${post.title}</h3>
+          <p class="blog-excerpt">${post.excerpt || post.metaDescription || 'No description available.'}</p>
+          <a href="https://pulsiveblog.vercel.app/posts/${post.slug}" class="blog-link" target="_blank" rel="noopener noreferrer">Read Article</a>
+        </div>
+      </article>
+    `
+  }
+}
+
 // ===== ANIMATION MANAGER =====
 class AnimationManager {
   constructor() {
@@ -469,6 +567,7 @@ class App {
     this.themeManager = null
     this.navigationManager = null
     this.projectManager = null
+    this.blogManager = null
     this.animationManager = null
   }
 
@@ -480,6 +579,9 @@ class App {
 
       // Initialize GitHub integration and projects
       this.projectManager = new ProjectManager()
+
+      // Initialize Pulsiveblog integration
+      this.blogManager = new BlogManager()
 
       // Initialize animations (only if user doesn't prefer reduced motion)
       if (!Utils.prefersReducedMotion()) {
