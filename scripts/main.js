@@ -39,10 +39,6 @@ const CONFIG = {
       },
     ],
   },
-  pulsiveblog: {
-    apiUrl: "https://pulsiveblog.vercel.app/api/v1",
-    apiKey: "{{PULSIVEBLOG_API_KEY}}"
-  },
   animations: {
     observerOptions: {
       threshold: 0.1,
@@ -403,54 +399,57 @@ class ProjectManager {
   }
 }
 
-// ===== BLOG MANAGER =====
+// ===== BLOG MANAGER (Technical Notes — GitHub Repos) =====
 class BlogManager {
   constructor() {
     this.blogGrid = document.getElementById("blog-grid")
-    this.apiUrl = CONFIG.pulsiveblog.apiUrl
-    this.apiKey = CONFIG.pulsiveblog.apiKey
+    this.githubAPI = new GitHubAPI()
 
     this.init()
   }
 
   async init() {
     if (!this.blogGrid) return
-    await this.loadBlogs()
+    await this.loadTechNotes()
   }
 
-  async loadBlogs() {
+  async loadTechNotes() {
     try {
       // Clear current content (except noscript)
-      const noscript = this.blogGrid.querySelector('noscript');
-      this.blogGrid.innerHTML = '';
-      if (noscript) this.blogGrid.appendChild(noscript);
+      const noscript = this.blogGrid.querySelector('noscript')
+      this.blogGrid.innerHTML = ''
+      if (noscript) this.blogGrid.appendChild(noscript)
 
-      // Fetch all published posts
-      const response = await fetch(`${this.apiUrl}/posts?api_key=${this.apiKey}&status=published`)
-      if (response.ok) {
-        const data = await response.json()
-        const posts = data.posts || []
+      const repos = await this.githubAPI.getRepositories()
 
-        if (posts.length === 0) {
-          this.renderBlogsFallback("No technical notes found yet. Check back soon!")
-          return
-        }
-
-        posts.forEach(post => {
-          this.renderBlogPost(post)
-        })
-      } else {
-        throw new Error(`API error: ${response.status}`)
+      if (!repos || repos.length === 0) {
+        this.renderFallback("No public repositories found. Check back soon!")
+        return
       }
+
+      // Randomly pick 3 repos on every page load
+      const selected = this.pickRandom(repos, 3)
+      selected.forEach(repo => {
+        this.blogGrid.insertAdjacentHTML('beforeend', this.createRepoCard(repo))
+      })
     } catch (error) {
-      console.error("Error loading blogs from Pulsiveblog:", error)
-      this.renderBlogsFallback("Unable to load technical notes at this time.")
+      console.error("Error loading tech notes from GitHub:", error)
+      this.renderFallback("Unable to load technical notes at this time.")
     }
   }
 
-  renderBlogsFallback(message) {
+  pickRandom(arr, n) {
+    const copy = [...arr]
+    for (let i = copy.length - 1; i > 0; i--) {
+      const randomIndex = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[randomIndex]] = [copy[randomIndex], copy[i]]
+    }
+    return copy.slice(0, n)
+  }
+
+  renderFallback(message) {
     this.blogGrid.insertAdjacentHTML('beforeend', `
-      <div class="blog-card" style="grid-column: 1 / -1; text-align: center; border-style: dashed; opacity: 0.7;">
+      <div class="blog-card blog-card--empty">
         <div class="blog-content">
           <p class="blog-excerpt">${message}</p>
         </div>
@@ -458,39 +457,35 @@ class BlogManager {
     `)
   }
 
-  renderBlogPost(post, prepend = false) {
-    const card = this.createBlogCard(post)
-    if (prepend) {
-      this.blogGrid.insertAdjacentHTML('afterbegin', card)
-    } else {
-      this.blogGrid.insertAdjacentHTML('beforeend', card)
-    }
-  }
-
-  createBlogCard(post) {
-    // Format date if available
-    const date = post.createdAt ? new Date(post.createdAt).toLocaleDateString('en-US', {
-      month: 'short',
-      year: 'numeric'
-    }) : 'Recent'
-
-    // Get primary tag
-    const tag = post.tags && post.tags.length > 0 ? post.tags[0] : 'Tech'
-
-    // Estimate read time (rough: 200 words per minute)
-    const wordCount = post.content ? post.content.split(/\s+/).length : 500
-    const readTime = Math.max(1, Math.ceil(wordCount / 200))
+  createRepoCard(repo) {
+    const name = this.githubAPI.stripEmojis(repo.name).replace(/-+/g, ' ').trim()
+    const description = this.githubAPI.stripEmojis(repo.description || "No description available.")
+    const language = repo.language || 'Code'
+    const stars = repo.stargazers_count || 0
+    const updatedDate = repo.updated_at ? this.githubAPI.formatDate(repo.updated_at) : 'Recently'
+    const defaultBranch = repo.default_branch || 'main'
+    const readmeUrl = `${repo.html_url}/blob/${defaultBranch}/README.md`
 
     return `
       <article class="blog-card fade-in-up">
+        <div class="blog-card-accent"></div>
         <div class="blog-content">
           <div class="blog-meta">
-            <span class="blog-date">${tag}</span>
-            <span class="read-time">${readTime} min read</span>
+            <span class="blog-lang-tag">${language}</span>
+            <span class="blog-stars">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              ${stars}
+            </span>
           </div>
-          <h3 class="blog-title">${post.title}</h3>
-          <p class="blog-excerpt">${post.excerpt || post.metaDescription || 'No description available.'}</p>
-          <a href="https://pulsiveblog.vercel.app/posts/${post.slug}" class="blog-link" target="_blank" rel="noopener noreferrer">Read Article</a>
+          <h3 class="blog-title">${name}</h3>
+          <p class="blog-excerpt">${description}</p>
+          <div class="blog-footer">
+            <span class="blog-updated">Updated ${updatedDate}</span>
+            <a href="${readmeUrl}" class="blog-link" target="_blank" rel="noopener noreferrer">
+              See More
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </a>
+          </div>
         </div>
       </article>
     `
