@@ -16,7 +16,6 @@ A premium, responsive, and highly customizable personal portfolio website. Built
     - Real-time fetching of repository data via GitHub API.
     - Automatic filtering to exclude forks/clones and specific meta-repositories.
     - Smart sorting by latest pushed activity to prioritize current work.
-    - Automated emoji stripping for a clean, professional text-only interface.
 - **SEO & Performance**: Optimized with descriptive meta tags, semantic HTML5 structure, and minimal external dependencies for lightning-fast load times.
 - **Technical Notes**: A curated section highlighting deep technical expertise in Networking, Backend Service Architecture, and System Design.
 
@@ -50,15 +49,9 @@ This project is built with zero dependencies. You only need a modern web browser
 
 4. **Deployment**:
    Push your changes to the `main` branch. A GitHub Action will automatically:
-   - Inject your **Pulsiveblog API Key** from GitHub Secrets.
    - Deploy the build to the `gh-pages` branch.
 
-### Managing Secrets
-To securely manage your **Pulsiveblog API Key**:
-1. Go to your GitHub Repository **Settings** > **Secrets and variables** > **Actions**.
-2. Click **New repository secret**.
-3. Name: `PULSIVEBLOG_API_KEY`.
-4. Value: Your private API key (starts with `pb_`).
+---
 
 ### GitHub Pages Setup
 Since we now use an automated build process:
