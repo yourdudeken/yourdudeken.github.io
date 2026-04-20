@@ -53,7 +53,7 @@ This project is built with zero dependencies. You only need a modern web browser
 
 ---
 
-### GitHub Pages Setup
+## GitHub Pages Setup
 Since we now use an automated build process:
 1. Go to Your Repo **Settings** > **Pages**.
 2. Under **Build and deployment** > **Branch**, select `gh-pages` and `/ (root)`.
