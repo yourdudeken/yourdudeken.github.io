@@ -8,36 +8,6 @@ const CONFIG = {
   github: {
     username: "yourdudeken",
     apiUrl: "https://api.github.com",
-    // Fallback projects data for when API is unavailable
-    fallbackProjects: [
-      {
-        id: 1,
-        name: "awesome-web-app",
-        description: "A modern web application built with vanilla JavaScript and responsive design principles.",
-        html_url: "https://github.com/yourdudeken/awesome-web-app",
-        homepage: "https://yourdudeken.github.io/awesome-web-app",
-        language: "JavaScript",
-        topics: ["javascript", "html", "css", "responsive-design"],
-      },
-      {
-        id: 2,
-        name: "python-data-analyzer",
-        description: "Data analysis tool for processing and visualizing large datasets with Python and pandas.",
-        html_url: "https://github.com/yourdudeken/python-data-analyzer",
-        homepage: null,
-        language: "Python",
-        topics: ["python", "data-analysis", "pandas", "visualization"],
-      },
-      {
-        id: 3,
-        name: "react-component-library",
-        description: "Reusable React components with TypeScript and comprehensive testing suite.",
-        html_url: "https://github.com/yourdudeken/react-component-library",
-        homepage: "https://yourdudeken.github.io/react-component-library",
-        language: "TypeScript",
-        topics: ["react", "typescript", "components", "testing"],
-      },
-    ],
   },
   animations: {
     observerOptions: {
@@ -226,26 +196,26 @@ class GitHubAPI {
 
   async getRepositories() {
     if (this.rateLimitExceeded) {
-      return CONFIG.github.fallbackProjects
+      return []
     }
 
     const url = `${this.baseUrl}/users/${this.username}/repos?sort=pushed&per_page=100`
     const repos = await this.fetchWithCache(url, "repositories")
 
-    if (!repos) return CONFIG.github.fallbackProjects
+    if (!repos) return []
 
     // Filter out forked repositories and the main profile/portfolio repos
-    return repos.filter(repo => !repo.fork && repo.name !== 'yourdudeken' && repo.name !== 'yourdudeken.github.io') || CONFIG.github.fallbackProjects
+    return repos.filter(repo => !repo.fork && repo.name !== 'yourdudeken' && repo.name !== 'yourdudeken.github.io') || []
   }
 
   async getFeaturedRepository() {
     if (this.rateLimitExceeded) {
-      return CONFIG.github.fallbackProjects[0]
+      return null
     }
 
     const repos = await this.getRepositories()
     if (!repos || repos.length === 0) {
-      return CONFIG.github.fallbackProjects[0]
+      return null
     }
 
     // Get the most recently updated repository
@@ -290,6 +260,8 @@ class ProjectManager {
       const repo = await this.githubAPI.getFeaturedRepository()
       if (repo) {
         this.renderFeaturedRepository(repo)
+      } else {
+        this.renderFeaturedRepositoryFallback()
       }
     } catch (error) {
       console.error("Error loading featured repository:", error)
@@ -350,6 +322,8 @@ class ProjectManager {
       const repos = await this.githubAPI.getRepositories()
       if (repos && repos.length > 0) {
         this.renderProjects(repos) // Show all projects
+      } else {
+        this.renderProjectsFallback()
       }
     } catch (error) {
       console.error("Error loading projects:", error)
@@ -395,7 +369,19 @@ class ProjectManager {
   }
 
   renderProjectsFallback() {
-    this.projectsGrid.innerHTML = CONFIG.github.fallbackProjects.map((repo) => this.createProjectCard(repo)).join("")
+    this.projectsGrid.innerHTML = `
+      <div class="project-card fade-in-up" style="grid-column: 1 / -1; text-align: center; border-style: dashed; box-shadow: none; background: transparent;">
+        <div class="project-content">
+          <h3 class="project-title">Projects Unavailable</h3>
+          <p class="project-description">Unable to load repositories from GitHub at the moment. Please visit my profile directly to see my open source work.</p>
+          <div class="project-actions" style="justify-content: center;">
+            <a href="https://github.com/${CONFIG.github.username}" class="btn btn-small" target="_blank" rel="noopener noreferrer">
+              View GitHub Profile
+            </a>
+          </div>
+        </div>
+      </div>
+    `
   }
 }
 
@@ -495,7 +481,7 @@ class BlogManager {
 // ===== ANIMATION MANAGER =====
 class AnimationManager {
   constructor() {
-    this.observedElements = document.querySelectorAll("section, .project-card, .featured-repo-card")
+    this.observedElements = document.querySelectorAll("section, .project-card, .featured-repo-card, .work-card")
     this.observer = null
 
     this.init()
