@@ -6,22 +6,78 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ken | Full-Stack Developer & Software Engineer</title>
     <meta name="description"
-        content="Senior Full-Stack Developer specializing in high-concurrency systems, fintech solutions, and algorithmic trading. Explored my portfolio of innovative web applications and technical insights.">
+        content="Senior Full-Stack Developer specializing in high-concurrency systems, fintech solutions, and algorithmic trading. Explore my portfolio of innovative web applications and technical insights.">
     <meta name="keywords"
         content="Full-Stack Developer, Software Engineer, Node.js, Fintech, MT5, Python, React, Web Development">
     <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#4f46e5">
+    <meta property="og:title" content="Ken | Full-Stack Developer & Software Engineer">
+    <meta property="og:description" content="Senior Full-Stack Developer building scalable, high-concurrency systems.">
+    <meta property="og:type" content="website">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="styles/main.css">
     <link rel="icon" type="image/png" href="assets/ken-photo-circle.png">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Ken",
+      "url": "https://yourdudeken.github.io",
+      "image": "https://yourdudeken.github.io/assets/ken-photo.jpeg",
+      "sameAs": [
+        "https://github.com/yourdudeken",
+        "https://linkedin.com/in/yourdudeken",
+        "https://twitter.com/yourdudeken"
+      ],
+      "jobTitle": "Full-Stack Developer & Software Engineer",
+      "knowsAbout": ["Full-Stack Development", "Fintech", "Algorithmic Trading", "High-Concurrency Systems"]
+    }
+    </script>
 </head>
 
 <body>
     <!-- Skip to main content for accessibility -->
     <a href="#main" class="skip-link">Skip to main content</a>
+
+    <!-- Scroll progress indicator -->
+    <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
+
+    <!-- Command Palette -->
+    <div id="command-palette" class="command-palette" role="dialog" aria-modal="true" aria-label="Command palette" hidden>
+        <div class="command-palette-backdrop" data-cp-close></div>
+        <div class="command-palette-panel">
+            <div class="command-palette-input-wrap">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" id="command-palette-input" class="command-palette-input" placeholder="Search sections, projects, links…" autocomplete="off" aria-label="Search commands">
+                <kbd class="command-palette-esc">Esc</kbd>
+            </div>
+            <ul id="command-palette-list" class="command-palette-list" role="listbox"></ul>
+        </div>
+    </div>
+
+    <!-- README Viewer Modal -->
+    <div id="readme-viewer" class="readme-viewer" role="dialog" aria-modal="true" aria-label="Repository README" hidden>
+        <div class="readme-viewer-backdrop" data-rv-close></div>
+        <div class="readme-viewer-panel">
+            <div class="readme-viewer-header">
+                <h3 id="readme-viewer-title" class="readme-viewer-title">README</h3>
+                <button class="readme-viewer-close" data-rv-close aria-label="Close README viewer">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <div class="readme-viewer-body">
+                <div id="readme-viewer-content" class="readme-viewer-content markdown-body"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 
     <!-- Navigation -->
     <nav class="nav" role="navigation" aria-label="Main navigation">
@@ -31,10 +87,10 @@
                 <a href="#about" class="nav-link">About</a>
                 <a href="#work" class="nav-link">Work</a>
                 <a href="#projects" class="nav-link">Open Source</a>
+                <a href="#activity" class="nav-link">Activity</a>
                 <a href="#blog" class="nav-link">Notes</a>
                 <a href="#contact" class="nav-link">Contact</a>
             </div>
-            <!-- moved theme toggle into navigation header -->
             <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
                 <span class="theme-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -50,32 +106,70 @@
     <main id="main" role="main">
         <!-- Hero Section -->
         <section id="hero" class="hero">
+            <div class="hero-grid-texture" aria-hidden="true"></div>
             <div class="hero-container">
                 <div class="hero-content">
+                    <span class="hero-availability">
+                        <span class="status-dot"></span>
+                        Available for new projects
+                    </span>
+                    <span class="hero-kbd-hint" aria-hidden="true">
+                        Press <kbd>⌘K</kbd> to search
+                    </span>
                     <img src="assets/ken-photo.jpeg" alt="Ken's profile picture" class="hero-avatar">
-                    <h1 class="hero-title">Hi, I'm Ken</h1>
-                    <p class="hero-tagline">Full-stack developer passionate about creating innovative web solutions</p>
+                    <p class="hero-eyebrow">Hi, I'm Ken</p>
+                    <h1 class="hero-title">Building software that scales</h1>
+                    <div class="hero-rotator" aria-live="polite">
+                        <span class="rotator-static">I build</span>
+                        <span class="rotator-word" id="rotator-word">web platforms</span>
+                        <span class="rotator-cursor" aria-hidden="true"></span>
+                    </div>
+                    <p class="hero-tagline">Full-stack developer passionate about creating innovative, high-concurrency
+                        web solutions — from fintech and trading systems to developer-first APIs.</p>
                     <div class="hero-actions">
                         <a href="#projects" class="btn btn-primary">View My Work</a>
                         <a href="#contact" class="btn btn-secondary">Get In Touch</a>
                     </div>
                 </div>
             </div>
+            <div class="hero-scroll-hint" aria-hidden="true">
+                <span>Scroll</span>
+                <span class="mouse"></span>
+            </div>
         </section>
 
         <!-- About Section -->
         <section id="about" class="about">
             <div class="container">
-                <h2 class="section-title">About Me</h2>
+                <div class="section-header reveal">
+                    <span class="section-eyebrow">About</span>
+                    <h2 class="section-title">A bit about me</h2>
+                    <p class="section-subtitle">Clean code, scalable architecture, and a deep curiosity for how things
+                        work under the hood.</p>
+                </div>
                 <div class="about-content">
-                    <div class="about-text">
+                    <div class="about-text reveal">
                         <p>I'm a passionate full-stack developer with expertise in modern web technologies. I love
                             building scalable applications and solving complex problems through clean, efficient code.
                         </p>
                         <p>When I'm not coding, you can find me exploring new technologies, contributing to open source
                             projects, or sharing knowledge with the developer community.</p>
+                        <div class="about-stats reveal-stagger">
+                            <div class="stat-card">
+                                <div class="stat-value" data-stat="repos">—</div>
+                                <div class="stat-label">Repos</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" data-stat="stars">—</div>
+                                <div class="stat-label">Stars</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" data-stat="languages">—</div>
+                                <div class="stat-label">Languages</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="skills">
+                    <div class="skills reveal">
                         <h3 class="skills-title">Skills & Technologies</h3>
                         <div class="skills-grid">
                             <span class="skill-tag">JavaScript</span>
@@ -94,13 +188,36 @@
             </div>
         </section>
 
+        <!-- GitHub Activity Heatmap -->
+        <section id="activity" class="activity">
+            <div class="container">
+                <div class="section-header reveal">
+                    <span class="section-eyebrow">Activity</span>
+                    <h2 class="section-title">GitHub activity</h2>
+                    <p class="section-subtitle">A live look at my contribution rhythm over the last few months.</p>
+                </div>
+                <div id="heatmap-container" class="heatmap-container reveal">
+                    <div class="skeleton-card" aria-hidden="true">
+                        <div class="skeleton skeleton-line skeleton-line--lg" style="height: 120px; border-radius: var(--radius);"></div>
+                    </div>
+                    <noscript>
+                        <p style="text-align:center; color: var(--color-text-muted);">Enable JavaScript to view activity.</p>
+                    </noscript>
+                </div>
+            </div>
+        </section>
+
         <!-- Work/Personal Projects Section -->
         <section id="work" class="work">
             <div class="container">
-                <h2 class="section-title">Selected Work</h2>
-                <div class="work-grid">
+                <div class="section-header reveal">
+                    <span class="section-eyebrow">Selected Work</span>
+                    <h2 class="section-title">Things I'm building</h2>
+                    <p class="section-subtitle">A few products and platforms I'm currently pouring my time into.</p>
+                </div>
+                <div class="work-grid reveal-stagger">
                     <!-- EventTik Project -->
-                    <div class="work-card fade-in-up work-card--featured">
+                    <div class="work-card work-card--featured">
                         <div class="work-image">
                             <img src="assets/eventtik.png" alt="EventTik Platform Screenshot" loading="lazy">
                         </div>
@@ -110,12 +227,21 @@
                                 <span class="work-status">Currently Building</span>
                             </div>
                             <p class="work-description">
-                                EventTik is the modern ticketing and event platform built for how Africa moves. Sell tickets, scan at the door, accept M-Pesa, manage staff, and build on a developer-first API. One platform. Every event.
+                                EventTik is the modern ticketing and event platform built for how Africa moves. Sell
+                                tickets, scan at the door, accept M-Pesa, manage staff, and build on a developer-first
+                                API. One platform. Every event.
                             </p>
                             <div class="work-actions">
-                                <a href="https://eventtik.co.ke" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                                <a href="https://eventtik.co.ke" class="btn btn-primary" target="_blank"
+                                    rel="noopener noreferrer">
                                     Visit Website
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 8px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                        <polyline points="15 3 21 3 21 9"></polyline>
+                                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                                    </svg>
                                 </a>
                             </div>
                         </div>
@@ -127,9 +253,22 @@
         <!-- Featured Repository Section -->
         <section id="featured-repo" class="featured-repo">
             <div class="container">
-                <h2 class="section-title">Featured Repository</h2>
-                <div id="featured-repo-content" class="featured-repo-card">
+                <div class="section-header reveal">
+                    <span class="section-eyebrow">Featured</span>
+                    <h2 class="section-title">Latest repository</h2>
+                    <p class="section-subtitle">The repo I've most recently pushed to — straight from GitHub.</p>
+                </div>
+                <div id="featured-repo-content" class="featured-repo-card reveal">
                     <!-- Content will be populated by JavaScript -->
+                    <div class="skeleton-card" aria-hidden="true">
+                        <div class="skeleton skeleton-line skeleton-line--title"></div>
+                        <div class="skeleton skeleton-line skeleton-line--lg"></div>
+                        <div class="skeleton skeleton-line skeleton-line--md"></div>
+                        <div style="display:flex; gap:1rem; margin-top:0.5rem;">
+                            <div class="skeleton skeleton-line skeleton-line--sm"></div>
+                            <div class="skeleton skeleton-line skeleton-line--sm"></div>
+                        </div>
+                    </div>
                     <noscript>
                         <div class="repo-card">
                             <h3>Featured Project</h3>
@@ -143,9 +282,48 @@
         <!-- Projects Section -->
         <section id="projects" class="projects">
             <div class="container">
-                <h2 class="section-title">Open Source Projects</h2>
+                <div class="section-header reveal">
+                    <span class="section-eyebrow">Open Source</span>
+                    <h2 class="section-title">Projects from GitHub</h2>
+                    <p class="section-subtitle">Live from the GitHub API — forks filtered out, sorted by recent
+                        activity.</p>
+                </div>
+                <div id="project-filter-bar" class="project-filter-bar reveal" hidden>
+                    <div class="project-search-wrap">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <input type="text" id="project-search" class="project-search" placeholder="Search projects…" aria-label="Search projects">
+                    </div>
+                    <div id="project-filter-chips" class="project-filter-chips" role="group" aria-label="Filter by language"></div>
+                </div>
                 <div id="projects-grid" class="projects-grid">
-                    <!-- Projects will be populated by JavaScript -->
+                    <!-- Skeletons populated by JavaScript on load -->
+                    <div class="skeleton-card" aria-hidden="true">
+                        <div class="skeleton skeleton-line skeleton-line--title"></div>
+                        <div class="skeleton skeleton-line skeleton-line--lg"></div>
+                        <div class="skeleton skeleton-line skeleton-line--md"></div>
+                        <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
+                            <div class="skeleton skeleton-line skeleton-line--sm"></div>
+                            <div class="skeleton skeleton-line skeleton-line--sm"></div>
+                        </div>
+                    </div>
+                    <div class="skeleton-card" aria-hidden="true">
+                        <div class="skeleton skeleton-line skeleton-line--title"></div>
+                        <div class="skeleton skeleton-line skeleton-line--lg"></div>
+                        <div class="skeleton skeleton-line skeleton-line--md"></div>
+                        <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
+                            <div class="skeleton skeleton-line skeleton-line--sm"></div>
+                            <div class="skeleton skeleton-line skeleton-line--sm"></div>
+                        </div>
+                    </div>
+                    <div class="skeleton-card" aria-hidden="true">
+                        <div class="skeleton skeleton-line skeleton-line--title"></div>
+                        <div class="skeleton skeleton-line skeleton-line--lg"></div>
+                        <div class="skeleton skeleton-line skeleton-line--md"></div>
+                        <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
+                            <div class="skeleton skeleton-line skeleton-line--sm"></div>
+                            <div class="skeleton skeleton-line skeleton-line--sm"></div>
+                        </div>
+                    </div>
                     <noscript>
                         <div class="project-card" style="grid-column: 1 / -1; text-align: center; border-style: dashed; box-shadow: none; background: transparent;">
                             <div class="project-content">
@@ -164,9 +342,31 @@
         <!-- Blog/Notes Section -->
         <section id="blog" class="blog">
             <div class="container">
-                <h2 class="section-title">Technical Notes</h2>
+                <div class="section-header reveal">
+                    <span class="section-eyebrow">Notes</span>
+                    <h2 class="section-title">Technical notes</h2>
+                    <p class="section-subtitle">A rotating selection of repositories worth a closer look.</p>
+                </div>
                 <div id="blog-grid" class="blog-grid">
-                    <!-- Dynamic posts will be populated here -->
+                    <!-- Skeletons populated by JavaScript on load -->
+                    <div class="skeleton-card" aria-hidden="true">
+                        <div class="skeleton skeleton-line skeleton-line--sm"></div>
+                        <div class="skeleton skeleton-line skeleton-line--title"></div>
+                        <div class="skeleton skeleton-line skeleton-line--lg"></div>
+                        <div class="skeleton skeleton-line skeleton-line--md"></div>
+                    </div>
+                    <div class="skeleton-card" aria-hidden="true">
+                        <div class="skeleton skeleton-line skeleton-line--sm"></div>
+                        <div class="skeleton skeleton-line skeleton-line--title"></div>
+                        <div class="skeleton skeleton-line skeleton-line--lg"></div>
+                        <div class="skeleton skeleton-line skeleton-line--md"></div>
+                    </div>
+                    <div class="skeleton-card" aria-hidden="true">
+                        <div class="skeleton skeleton-line skeleton-line--sm"></div>
+                        <div class="skeleton skeleton-line skeleton-line--title"></div>
+                        <div class="skeleton skeleton-line skeleton-line--lg"></div>
+                        <div class="skeleton skeleton-line skeleton-line--md"></div>
+                    </div>
                     <noscript>
                         <div class="blog-card">
                             <h3 class="blog-title">Technical Notes</h3>
@@ -180,20 +380,29 @@
         <!-- Contact Section -->
         <section id="contact" class="contact">
             <div class="container">
-                <h2 class="section-title">Get In Touch</h2>
-                <div class="contact-content">
-                    <p class="contact-text">I'm always interested in new opportunities and collaborations. Feel free to
-                        reach out!</p>
+                <div class="section-header reveal">
+                    <span class="section-eyebrow">Contact</span>
+                    <h2 class="section-title">Get in touch</h2>
+                    <p class="section-subtitle">I'm always interested in new opportunities and collaborations.</p>
+                </div>
+                <div class="contact-content reveal">
+                    <p class="contact-text">Have a project in mind or just want to say hello? My inbox is always open.
+                    </p>
                     <div class="contact-links">
-                        <a href="mailto:kenmwendwamuthengi@gmail.com" class="contact-link" aria-label="Send email">
-                            <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2">
-                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
-                                </path>
-                                <polyline points="22,6 12,13 2,6"></polyline>
-                            </svg>
-                            Email
-                        </a>
+                        <div class="contact-link-group">
+                            <a href="mailto:kenmwendwamuthengi@gmail.com" class="contact-link" aria-label="Send email">
+                                <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
+                                    </path>
+                                    <polyline points="22,6 12,13 2,6"></polyline>
+                                </svg>
+                                Email
+                            </a>
+                            <button id="copy-email" class="contact-link-copy" aria-label="Copy email address to clipboard" title="Copy email">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            </button>
+                        </div>
                         <a href="https://github.com/yourdudeken" class="contact-link" aria-label="Visit GitHub profile"
                             target="_blank" rel="noopener noreferrer">
                             <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -236,7 +445,7 @@
     <footer class="footer" role="contentinfo">
         <div class="container">
             <div class="footer-content">
-                <p>&copy; 2026 Ken. Developed with precision and craft.</p>
+                <p>&copy; <span id="footer-year">2026</span> Ken. Developed with precision and craft.</p>
                 <div class="footer-bottom-links">
                     <a href="https://github.com/yourdudeken/yourdudeken.github.io" target="_blank" rel="noopener noreferrer">Source Code</a>
                     <a href="#hero">Back to Top</a>
