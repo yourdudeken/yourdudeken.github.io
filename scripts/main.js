@@ -13,11 +13,11 @@ const CONFIG = {
   },
   hero: {
     roles: [
-      "web platforms",
       "fintech tools",
-      "trading systems",
+      "payment integrations",
       "developer APIs",
-      "scalable backends",
+      "accessible web apps",
+      "event platforms",
     ],
     typeSpeed: 85,
     deleteSpeed: 40,
@@ -291,17 +291,11 @@ class GitHubAPI {
     return repos.filter(repo => !repo.fork && repo.name !== 'yourdudeken' && repo.name !== 'yourdudeken.github.io') || []
   }
 
-  async getFeaturedRepository() {
-    if (this.rateLimitExceeded) {
-      return null
-    }
-
-    const repos = await this.getRepositories()
-    if (!repos || repos.length === 0) {
-      return null
-    }
-
-    return repos[0]
+  // Fetch the public user profile (bio, followers, etc.)
+  async getUserProfile() {
+    if (this.rateLimitExceeded) return null
+    const url = `${this.baseUrl}/users/${this.username}`
+    return await this.fetchWithCache(url, "user_profile")
   }
 
   // Fetch recent public events for the contribution heatmap
@@ -379,21 +373,28 @@ class StatsManager {
     this.statEls = {
       repos: document.querySelector('[data-stat="repos"]'),
       stars: document.querySelector('[data-stat="stars"]'),
-      languages: document.querySelector('[data-stat="languages"]'),
+      followers: document.querySelector('[data-stat="followers"]'),
     }
   }
 
   async update() {
     if (!this.statEls.repos) return
-    const repos = await this.githubAPI.getRepositories()
-    if (!repos || repos.length === 0) return
+    const [repos, profile] = await Promise.all([
+      this.githubAPI.getRepositories(),
+      this.githubAPI.getUserProfile(),
+    ])
 
-    const stars = repos.reduce((sum, r) => sum + (r.stargazers_count || 0), 0)
-    const languages = new Set(repos.map(r => r.language).filter(Boolean))
+    if (repos && repos.length > 0) {
+      const stars = repos.reduce((sum, r) => sum + (r.stargazers_count || 0), 0)
+      this.animateNumber(this.statEls.repos, repos.length)
+      this.animateNumber(this.statEls.stars, stars)
+    }
 
-    this.animateNumber(this.statEls.repos, repos.length)
-    this.animateNumber(this.statEls.stars, stars)
-    this.animateNumber(this.statEls.languages, languages.size)
+    if (profile && profile.followers != null) {
+      this.animateNumber(this.statEls.followers, profile.followers)
+    } else if (this.statEls.followers) {
+      this.statEls.followers.textContent = "67"
+    }
   }
 
   animateNumber(el, target) {
@@ -421,7 +422,6 @@ class ProjectManager {
     this.readmeViewer = opts.readmeViewer || null
     this.projectFilter = opts.projectFilter || null
     this.projectsGrid = document.getElementById("projects-grid")
-    this.featuredRepoContent = document.getElementById("featured-repo-content")
     this.statsManager = new StatsManager(this.githubAPI)
     this.repos = []
 
@@ -429,79 +429,24 @@ class ProjectManager {
   }
 
   async init() {
-    await this.loadFeaturedRepository()
+    this.bindWorkReadmeButtons()
     await this.loadProjects()
     this.statsManager.update()
   }
 
+  bindWorkReadmeButtons() {
+    document.querySelectorAll("#work [data-readme]").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault()
+        const repoName = btn.dataset.readme
+        const displayName = btn.dataset.displayName || repoName
+        this.readmeViewer?.open(repoName, displayName)
+      })
+    })
+  }
+
   clearSkeletons(container) {
     container?.querySelectorAll(".skeleton-card").forEach(el => el.remove())
-  }
-
-  async loadFeaturedRepository() {
-    if (!this.featuredRepoContent) return
-
-    try {
-      const repo = await this.githubAPI.getFeaturedRepository()
-      if (repo) {
-        this.renderFeaturedRepository(repo)
-      } else {
-        this.renderFeaturedRepositoryFallback()
-      }
-    } catch (error) {
-      console.error("Error loading featured repository:", error)
-      this.renderFeaturedRepositoryFallback()
-    }
-  }
-
-  renderFeaturedRepository(repo) {
-    const name = this.githubAPI.stripEmojis(repo.name)
-    const description = this.githubAPI.stripEmojis(repo.description || "No description available.")
-    const updatedDate = repo.updated_at ? this.githubAPI.formatDate(repo.updated_at) : "Recently"
-
-    this.clearSkeletons(this.featuredRepoContent)
-
-    this.featuredRepoContent.innerHTML = `
-      <div class="repo-card">
-        <h3>${name}</h3>
-        <p>${description}</p>
-        ${repo.language ? `<span class="repo-language">${repo.language}</span>` : ""}
-        <div class="repo-stats">
-          <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-star" style="vertical-align: text-bottom; margin-right: 4px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> ${repo.stargazers_count || 0}</span>
-          <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-git-branch" style="vertical-align: text-bottom; margin-right: 4px;"><line x1="6" y1="3" x2="6" y2="15"></line><circle cx="18" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle><path d="M18 9a9 9 0 0 1-9 9"></path></svg> ${repo.forks_count || 0}</span>
-          <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar" style="vertical-align: text-bottom; margin-right: 4px;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> Updated ${updatedDate}</span>
-        </div>
-        <div class="project-actions">
-          <a href="${repo.html_url}" class="btn btn-small btn-primary" target="_blank" rel="noopener noreferrer">
-            View on GitHub
-          </a>
-          ${repo.homepage
-        ? `
-            <a href="${repo.homepage}" class="btn btn-small btn-secondary" target="_blank" rel="noopener noreferrer">
-              Live Demo
-            </a>
-          `
-        : ""
-      }
-        </div>
-      </div>
-    `
-    document.dispatchEvent(new CustomEvent("content:rendered"))
-  }
-
-  renderFeaturedRepositoryFallback() {
-    this.clearSkeletons(this.featuredRepoContent)
-    this.featuredRepoContent.innerHTML = `
-      <div class="repo-card">
-        <h3>Featured Project</h3>
-        <p>Check out my latest work on GitHub!</p>
-        <div class="project-actions">
-          <a href="https://github.com/${CONFIG.github.username}" class="btn btn-small btn-primary" target="_blank" rel="noopener noreferrer">
-            View GitHub Profile
-          </a>
-        </div>
-      </div>
-    `
   }
 
   async loadProjects() {
@@ -583,115 +528,6 @@ class ProjectManager {
           </div>
         </div>
       </div>
-    `
-  }
-}
-
-// ===== BLOG MANAGER (Technical Notes — GitHub Repos) =====
-class BlogManager {
-  constructor(opts = {}) {
-    this.blogGrid = document.getElementById("blog-grid")
-    this.githubAPI = opts.githubAPI || new GitHubAPI()
-    this.readmeViewer = opts.readmeViewer || null
-
-    this.init()
-  }
-
-  async init() {
-    if (!this.blogGrid) return
-    await this.loadTechNotes()
-  }
-
-  async loadTechNotes() {
-    try {
-      this.clearSkeletons(this.blogGrid)
-
-      const repos = await this.githubAPI.getRepositories()
-
-      if (!repos || repos.length === 0) {
-        this.renderFallback("No public repositories found. Check back soon!")
-        return
-      }
-
-      const selected = this.pickRandom(repos, 3)
-      selected.forEach(repo => {
-        this.blogGrid.insertAdjacentHTML('beforeend', this.createRepoCard(repo))
-      })
-      this.bindReadmeButtons()
-      document.dispatchEvent(new CustomEvent("content:rendered"))
-    } catch (error) {
-      console.error("Error loading tech notes from GitHub:", error)
-      this.renderFallback("Unable to load technical notes at this time.")
-    }
-  }
-
-  bindReadmeButtons() {
-    if (!this.readmeViewer || !this.blogGrid) return
-    this.blogGrid.querySelectorAll("[data-readme]").forEach(btn => {
-      btn.addEventListener("click", (e) => {
-        e.preventDefault()
-        const repoName = btn.dataset.readme
-        const displayName = btn.dataset.displayName || repoName
-        this.readmeViewer.open(repoName, displayName)
-      })
-    })
-  }
-
-  clearSkeletons(container) {
-    container?.querySelectorAll(".skeleton-card").forEach(el => el.remove())
-  }
-
-  pickRandom(arr, n) {
-    const copy = [...arr]
-    for (let i = copy.length - 1; i > 0; i--) {
-      const randomIndex = Math.floor(Math.random() * (i + 1));
-      [copy[i], copy[randomIndex]] = [copy[randomIndex], copy[i]]
-    }
-    return copy.slice(0, n)
-  }
-
-  renderFallback(message) {
-    this.clearSkeletons(this.blogGrid)
-    this.blogGrid.insertAdjacentHTML('beforeend', `
-      <div class="blog-card blog-card--empty">
-        <div class="blog-content">
-          <p class="blog-excerpt">${message}</p>
-        </div>
-      </div>
-    `)
-  }
-
-  createRepoCard(repo) {
-    const name = this.githubAPI.stripEmojis(repo.name).replace(/-+/g, ' ').trim()
-    const description = this.githubAPI.stripEmojis(repo.description || "No description available.")
-    const language = repo.language || 'Code'
-    const stars = repo.stargazers_count || 0
-    const updatedDate = repo.updated_at ? this.githubAPI.formatDate(repo.updated_at) : 'Recently'
-    const defaultBranch = repo.default_branch || 'main'
-    const readmeUrl = `${repo.html_url}/blob/${defaultBranch}/README.md`
-
-    return `
-      <article class="blog-card fade-in-up">
-        <div class="blog-card-accent"></div>
-        <div class="blog-content">
-          <div class="blog-meta">
-            <span class="blog-lang-tag">${language}</span>
-            <span class="blog-stars">
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-              ${stars}
-            </span>
-          </div>
-          <h3 class="blog-title">${name}</h3>
-          <p class="blog-excerpt">${description}</p>
-          <div class="blog-footer">
-            <span class="blog-updated">Updated ${updatedDate}</span>
-            <a href="#" class="blog-link" data-readme="${repo.name}" data-display-name="${name}">
-              Read README
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-            </a>
-          </div>
-        </div>
-      </article>
     `
   }
 }
@@ -779,10 +615,8 @@ class CommandPalette {
       { label: "Home", href: "#hero", icon: this.iconHome() },
       { label: "About", href: "#about", icon: this.iconUser() },
       { label: "Selected Work", href: "#work", icon: this.iconBriefcase() },
-      { label: "Featured Repository", href: "#featured-repo", icon: this.iconStar() },
       { label: "Open Source", href: "#projects", icon: this.iconCode() },
       { label: "Activity", href: "#activity", icon: this.iconActivity() },
-      { label: "Technical Notes", href: "#blog", icon: this.iconBook() },
       { label: "Contact", href: "#contact", icon: this.iconMail() },
     ]
 
@@ -803,14 +637,12 @@ class CommandPalette {
   iconStar() { return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>' }
   iconCode() { return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>' }
   iconActivity() { return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>' }
-  iconBook() { return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>' }
   iconMail() { return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>' }
   iconGithub() { return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>' }
   iconLinkedin() { return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>' }
   iconTwitter() { return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>' }
   iconExternal() { return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>' }
   iconCopy() { return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>' }
-  iconSearch() { return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>' }
 
   bindEvents() {
     document.addEventListener("keydown", (e) => {
@@ -1249,7 +1081,6 @@ class App {
     this.themeManager = null
     this.navigationManager = null
     this.projectManager = null
-    this.blogManager = null
     this.animationManager = null
     this.heroRotator = null
     this.toast = null
@@ -1276,10 +1107,6 @@ class App {
         githubAPI: this.githubAPI,
         readmeViewer: this.readmeViewer,
         projectFilter: this.projectFilter,
-      })
-      this.blogManager = new BlogManager({
-        githubAPI: this.githubAPI,
-        readmeViewer: this.readmeViewer,
       })
 
       if (!Utils.prefersReducedMotion()) {
@@ -1339,7 +1166,6 @@ if (typeof module !== "undefined" && module.exports) {
     GitHubAPI,
     StatsManager,
     ProjectManager,
-    BlogManager,
     AnimationManager,
     Toast,
     CommandPalette,
