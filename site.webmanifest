@@ -1,0 +1,21 @@
+{
+  "name": "Kennedy Muthengi — Full-Stack Developer",
+  "short_name": "Kennedy Muthengi",
+  "description": "Full-stack developer building fintech tools, developer APIs, and accessible web platforms.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4f46e5",
+  "icons": [
+    {
+      "src": "assets/ken-photo-circle.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/ken-photo-circle.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
