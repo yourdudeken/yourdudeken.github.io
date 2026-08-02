@@ -1,7 +1,7 @@
 /**
  * Personal Portfolio Site - Main JavaScript
- * Handles theme switching, smooth scrolling, GitHub API integration, animations,
- * scroll progress, hero typewriter, and live stats.
+ * Handles theme switching, navigation, GitHub API integration,
+ * scroll reveal animations, README viewer, and full activity feed.
  */
 
 // ===== CONFIGURATION =====
@@ -10,18 +10,6 @@ const CONFIG = {
     username: "yourdudeken",
     apiUrl: "https://api.github.com",
     cacheTTL: 10 * 60 * 1000, // 10 minutes
-  },
-  hero: {
-    roles: [
-      "fintech tools",
-      "payment integrations",
-      "developer APIs",
-      "accessible web apps",
-      "event platforms",
-    ],
-    typeSpeed: 85,
-    deleteSpeed: 40,
-    pause: 1600,
   },
   animations: {
     observerOptions: {
@@ -63,8 +51,8 @@ class ThemeManager {
 
   updateThemeIcon(theme) {
     if (this.themeIcon) {
-      const sunIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sun"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
-      const moonIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-moon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
+      const sunIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
+      const moonIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
       this.themeIcon.innerHTML = theme === "dark" ? sunIcon : moonIcon;
     }
   }
@@ -85,13 +73,14 @@ class ThemeManager {
   }
 }
 
-// ===== SMOOTH SCROLLING & NAVIGATION =====
+// ===== NAVIGATION =====
 class NavigationManager {
   constructor() {
     this.navLinks = document.querySelectorAll(".nav-link")
     this.sections = document.querySelectorAll("section[id]")
     this.nav = document.querySelector(".nav")
-    this.scrollProgress = document.getElementById("scroll-progress")
+    this.navToggle = document.getElementById("nav-toggle")
+    this.navLinksContainer = document.querySelector(".nav-links")
 
     this.init()
   }
@@ -115,20 +104,23 @@ class NavigationManager {
             behavior: "smooth",
           })
         }
+
+        // Close mobile menu
+        this.navLinksContainer?.classList.remove("open")
+        this.navToggle?.setAttribute("aria-expanded", "false")
       })
     })
 
     window.addEventListener("scroll", () => this.handleScroll(), { passive: true })
+
+    this.navToggle?.addEventListener("click", () => {
+      const isOpen = this.navLinksContainer?.classList.toggle("open")
+      this.navToggle.setAttribute("aria-expanded", String(!!isOpen))
+    })
   }
 
   handleScroll() {
     const scrollY = window.scrollY
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight
-
-    if (this.scrollProgress && docHeight > 0) {
-      const pct = Math.min(100, (scrollY / docHeight) * 100)
-      this.scrollProgress.style.width = `${pct}%`
-    }
 
     if (scrollY > 50) {
       this.nav?.classList.add("scrolled")
@@ -171,49 +163,6 @@ class NavigationManager {
   }
 }
 
-// ===== HERO TYPEWRITER ROTATOR =====
-class HeroRotator {
-  constructor() {
-    this.el = document.getElementById("rotator-word")
-    this.roles = CONFIG.hero.roles
-    this.typeSpeed = CONFIG.hero.typeSpeed
-    this.deleteSpeed = CONFIG.hero.deleteSpeed
-    this.pause = CONFIG.hero.pause
-    this.roleIndex = 0
-    this.charIndex = 0
-    this.deleting = false
-
-    if (this.el && !Utils.prefersReducedMotion()) {
-      this.tick()
-    }
-  }
-
-  tick() {
-    const current = this.roles[this.roleIndex]
-
-    if (this.deleting) {
-      this.charIndex--
-    } else {
-      this.charIndex++
-    }
-
-    this.el.textContent = current.substring(0, this.charIndex)
-
-    let delay = this.deleting ? this.deleteSpeed : this.typeSpeed
-
-    if (!this.deleting && this.charIndex === current.length) {
-      delay = this.pause
-      this.deleting = true
-    } else if (this.deleting && this.charIndex === 0) {
-      this.deleting = false
-      this.roleIndex = (this.roleIndex + 1) % this.roles.length
-      delay = 400
-    }
-
-    setTimeout(() => this.tick(), delay)
-  }
-}
-
 // ===== GITHUB API INTEGRATION =====
 class GitHubAPI {
   constructor() {
@@ -224,7 +173,6 @@ class GitHubAPI {
     this.cacheTTL = CONFIG.github.cacheTTL
   }
 
-  // localStorage-backed cache with TTL
   getFromStorage(key) {
     try {
       const raw = localStorage.getItem(`gh_cache:${key}`)
@@ -291,14 +239,12 @@ class GitHubAPI {
     return repos.filter(repo => !repo.fork && repo.name !== 'yourdudeken' && repo.name !== 'yourdudeken.github.io') || []
   }
 
-  // Fetch the public user profile (bio, followers, etc.)
   async getUserProfile() {
     if (this.rateLimitExceeded) return null
     const url = `${this.baseUrl}/users/${this.username}`
     return await this.fetchWithCache(url, "user_profile")
   }
 
-  // Fetch recent public events for the contribution heatmap
   async getContributionEvents() {
     if (this.rateLimitExceeded) {
       return []
@@ -312,16 +258,9 @@ class GitHubAPI {
       allEvents.push(...events)
     }
 
-    return allEvents.filter(e =>
-      e.type === "PushEvent" ||
-      e.type === "CreateEvent" ||
-      e.type === "PullRequestEvent" ||
-      e.type === "IssuesEvent" ||
-      e.type === "ReleaseEvent"
-    )
+    return allEvents
   }
 
-  // Fetch and render a repo README as HTML
   async getReadme(repoName) {
     if (this.rateLimitExceeded) {
       return null
@@ -364,9 +303,24 @@ class GitHubAPI {
       day: "numeric",
     })
   }
+
+  timeAgo(dateString) {
+    const date = new Date(dateString)
+    const now = new Date()
+    const diffMs = now - date
+    const diffMin = Math.floor(diffMs / 60000)
+    const diffHr = Math.floor(diffMin / 60)
+    const diffDay = Math.floor(diffHr / 24)
+
+    if (diffMin < 1) return "just now"
+    if (diffMin < 60) return `${diffMin}m ago`
+    if (diffHr < 24) return `${diffHr}h ago`
+    if (diffDay < 7) return `${diffDay}d ago`
+    return date.toLocaleDateString("en-US", { month: "short", day: "numeric" })
+  }
 }
 
-// ===== STATS MANAGER (live from GitHub) =====
+// ===== STATS MANAGER =====
 class StatsManager {
   constructor(githubAPI) {
     this.githubAPI = githubAPI
@@ -469,7 +423,7 @@ class ProjectManager {
 
   renderProjects(repos) {
     this.clearSkeletons(this.projectsGrid)
-    this.projectsGrid.innerHTML = repos.map((repo, i) => this.createProjectCard(repo, i)).join("")
+    this.projectsGrid.innerHTML = repos.map((repo) => this.createProjectCard(repo)).join("")
     this.bindReadmeButtons()
     document.dispatchEvent(new CustomEvent("content:rendered"))
   }
@@ -532,6 +486,179 @@ class ProjectManager {
   }
 }
 
+// ===== ACTIVITY FEED MANAGER =====
+class ActivityFeedManager {
+  constructor(githubAPI) {
+    this.githubAPI = githubAPI
+    this.container = document.getElementById("activity-feed")
+    this.init()
+  }
+
+  async init() {
+    if (!this.container) return
+    await this.load()
+  }
+
+  async load() {
+    try {
+      const events = await this.githubAPI.getContributionEvents()
+      if (!events || events.length === 0) {
+        this.renderEmpty()
+        return
+      }
+      this.render(events)
+    } catch (error) {
+      console.error("Error loading activity feed:", error)
+      this.renderEmpty()
+    }
+  }
+
+  clearSkeletons() {
+    this.container?.querySelectorAll(".skeleton-card").forEach(el => el.remove())
+  }
+
+  iconFor(type) {
+    const icons = {
+      PushEvent: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v8"></path><path d="M8 6l4-4 4 4"></path><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path></svg>',
+      PullRequestEvent: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle><path d="M6 9v6"></path><circle cx="18" cy="18" r="3"></circle><path d="M18 9v3a3 3 0 0 1-3 3h-6"></path></svg>',
+      CreateEvent: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>',
+      IssuesEvent: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg>',
+      ReleaseEvent: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7L9 18l-5-5"></path></svg>',
+      ForkEvent: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="6" r="3"></circle><path d="M6 9v6"></path><path d="M18 9v3a3 3 0 0 1-3 3h-6"></path></svg>',
+      WatchEvent: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>',
+      IssueCommentEvent: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>',
+      CommitCommentEvent: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path><path d="M8 10h.01"></path><path d="M12 10h.01"></path><path d="M16 10h.01"></path></svg>',
+      PublicEvent: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20"></path><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>',
+    }
+    return icons[type] || icons.CreateEvent
+  }
+
+  describeEvent(event) {
+    const repo = event.repo?.name || ""
+    const repoShort = repo.replace(`${CONFIG.github.username}/`, "")
+    const repoUrl = `https://github.com/${repo}`
+    const repoLink = `<a href="${repoUrl}" target="_blank" rel="noopener noreferrer">${repoShort}</a>`
+    const time = this.githubAPI.timeAgo(event.created_at)
+
+    let title = ""
+    let detail = ""
+    let commitsHtml = ""
+
+    switch (event.type) {
+      case "PushEvent": {
+        const count = event.payload?.commits?.length || 1
+        const ref = event.payload?.ref?.replace("refs/heads/", "") || ""
+        title = `Pushed ${count} commit${count !== 1 ? "s" : ""} to <code>${ref}</code> in ${repoLink}`
+        const commitList = (event.payload?.commits || []).slice(0, 3)
+        if (commitList.length > 0) {
+          commitsHtml = `<div class="activity-item-commits">${commitList.map(c => {
+            const hash = (c.sha || "").substring(0, 7)
+            const msg = this.githubAPI.stripEmojis(c.message || "").split("\n")[0]
+            return `<div class="activity-commit"><span class="commit-hash">${hash}</span><span class="commit-msg">${msg}</span></div>`
+          }).join("")}</div>`
+        }
+        break
+      }
+      case "PullRequestEvent": {
+        const action = event.payload?.action || "updated"
+        const prTitle = this.githubAPI.stripEmojis(event.payload?.pull_request?.title || "")
+        const prNumber = event.payload?.pull_request?.number || ""
+        title = `${action.charAt(0).toUpperCase() + action.slice(1)} pull request #${prNumber} in ${repoLink}`
+        if (prTitle) detail = prTitle
+        break
+      }
+      case "CreateEvent": {
+        const refType = event.payload?.ref_type || "repository"
+        const ref = event.payload?.ref || ""
+        title = ref === ""
+          ? `Created ${refType} ${repoLink}`
+          : `Created ${refType} <code>${ref}</code> in ${repoLink}`
+        break
+      }
+      case "IssuesEvent": {
+        const action = event.payload?.action || "updated"
+        const issueTitle = this.githubAPI.stripEmojis(event.payload?.issue?.title || "")
+        const issueNumber = event.payload?.issue?.number || ""
+        title = `${action.charAt(0).toUpperCase() + action.slice(1)} issue #${issueNumber} in ${repoLink}`
+        if (issueTitle) detail = issueTitle
+        break
+      }
+      case "ReleaseEvent": {
+        const releaseName = this.githubAPI.stripEmojis(event.payload?.release?.name || "")
+        const tagName = event.payload?.release?.tag_name || ""
+        title = `Published release ${repoLink}`
+        if (releaseName || tagName) detail = `${tagName}${releaseName && releaseName !== tagName ? ` — ${releaseName}` : ""}`
+        break
+      }
+      case "ForkEvent": {
+        title = `Forked ${repoLink}`
+        break
+      }
+      case "WatchEvent": {
+        title = `Starred ${repoLink}`
+        break
+      }
+      case "IssueCommentEvent": {
+        const issueNumber = event.payload?.issue?.number || ""
+        title = `Commented on issue #${issueNumber} in ${repoLink}`
+        break
+      }
+      case "CommitCommentEvent": {
+        title = `Commented on a commit in ${repoLink}`
+        break
+      }
+      case "PublicEvent": {
+        title = `Made ${repoLink} public`
+        break
+      }
+      default: {
+        title = `Activity in ${repoLink}`
+      }
+    }
+
+    return { title, detail, commitsHtml, time }
+  }
+
+  render(events) {
+    this.clearSkeletons()
+
+    const html = events.slice(0, 30).map((event, i) => {
+      const { title, detail, commitsHtml, time } = this.describeEvent(event)
+      const icon = this.iconFor(event.type)
+      const delay = Math.min(i * 0.04, 0.8)
+
+      return `
+        <div class="activity-item" style="animation-delay: ${delay}s;">
+          <div class="activity-item-icon">${icon}</div>
+          <div class="activity-item-body">
+            <div class="activity-item-title">${title}</div>
+            <div class="activity-item-meta">
+              <span class="repo-name">${event.type.replace("Event", "")}</span>
+              <span class="dot"></span>
+              <span>${time}</span>
+            </div>
+            ${detail ? `<div class="activity-item-detail">${detail}</div>` : ""}
+            ${commitsHtml}
+          </div>
+        </div>
+      `
+    }).join("")
+
+    this.container.innerHTML = html
+    document.dispatchEvent(new CustomEvent("content:rendered"))
+  }
+
+  renderEmpty() {
+    this.clearSkeletons()
+    this.container.innerHTML = `
+      <div class="activity-empty">
+        <p>No recent public activity to display.</p>
+        <p><a href="https://github.com/${CONFIG.github.username}" target="_blank" rel="noopener noreferrer">View GitHub profile →</a></p>
+      </div>
+    `
+  }
+}
+
 // ===== ANIMATION MANAGER =====
 class AnimationManager {
   constructor() {
@@ -587,309 +714,6 @@ class Toast {
     if (!this.el) return
     this.el.classList.remove("is-visible")
     setTimeout(() => { this.el.hidden = true }, 360)
-  }
-}
-
-// ===== COMMAND PALETTE (Cmd/Ctrl+K) =====
-class CommandPalette {
-  constructor(toast) {
-    this.toast = toast
-    this.el = document.getElementById("command-palette")
-    this.input = document.getElementById("command-palette-input")
-    this.list = document.getElementById("command-palette-list")
-    this.commands = []
-    this.filtered = []
-    this.activeIndex = 0
-    this.isOpen = false
-
-    this.init()
-  }
-
-  init() {
-    this.buildCommands()
-    this.bindEvents()
-  }
-
-  buildCommands() {
-    const sections = [
-      { label: "Home", href: "#hero", icon: this.iconHome() },
-      { label: "About", href: "#about", icon: this.iconUser() },
-      { label: "Selected Work", href: "#work", icon: this.iconBriefcase() },
-      { label: "Open Source", href: "#projects", icon: this.iconCode() },
-      { label: "Activity", href: "#activity", icon: this.iconActivity() },
-      { label: "Contact", href: "#contact", icon: this.iconMail() },
-    ]
-
-    const links = [
-      { label: "GitHub Profile", href: "https://github.com/yourdudeken", icon: this.iconGithub(), external: true },
-      { label: "LinkedIn", href: "https://linkedin.com/in/yourdudeken", icon: this.iconLinkedin(), external: true },
-      { label: "Twitter", href: "https://twitter.com/yourdudeken", icon: this.iconTwitter(), external: true },
-      { label: "EventTik", href: "https://eventtik.co.ke", icon: this.iconExternal(), external: true },
-      { label: "Copy Email", action: "copy-email", icon: this.iconCopy() },
-    ]
-
-    this.commands = [...sections, ...links]
-  }
-
-  iconHome() { return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>' }
-  iconUser() { return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>' }
-  iconBriefcase() { return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>' }
-  iconStar() { return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>' }
-  iconCode() { return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>' }
-  iconActivity() { return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>' }
-  iconMail() { return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>' }
-  iconGithub() { return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>' }
-  iconLinkedin() { return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>' }
-  iconTwitter() { return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>' }
-  iconExternal() { return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>' }
-  iconCopy() { return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>' }
-
-  bindEvents() {
-    document.addEventListener("keydown", (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
-        e.preventDefault()
-        this.isOpen ? this.close() : this.open()
-      }
-      if (e.key === "Escape" && this.isOpen) this.close()
-    })
-
-    this.el?.querySelectorAll("[data-cp-close]").forEach(el => {
-      el.addEventListener("click", () => this.close())
-    })
-
-    this.input?.addEventListener("input", () => {
-      this.filter(this.input.value)
-    })
-
-    this.input?.addEventListener("keydown", (e) => {
-      if (e.key === "ArrowDown") {
-        e.preventDefault()
-        this.activeIndex = Math.min(this.activeIndex + 1, this.filtered.length - 1)
-        this.render()
-      } else if (e.key === "ArrowUp") {
-        e.preventDefault()
-        this.activeIndex = Math.max(this.activeIndex - 1, 0)
-        this.render()
-      } else if (e.key === "Enter") {
-        e.preventDefault()
-        this.execute(this.filtered[this.activeIndex])
-      }
-    })
-  }
-
-  open() {
-    if (!this.el) return
-    this.el.hidden = false
-    this.isOpen = true
-    this.input.value = ""
-    this.filter("")
-    setTimeout(() => this.input?.focus(), 50)
-    document.body.style.overflow = "hidden"
-  }
-
-  close() {
-    if (!this.el) return
-    this.el.hidden = true
-    this.isOpen = false
-    document.body.style.overflow = ""
-  }
-
-  filter(query) {
-    const q = query.toLowerCase().trim()
-    if (!q) {
-      this.filtered = [...this.commands]
-    } else {
-      this.filtered = this.commands.filter(c => c.label.toLowerCase().includes(q))
-    }
-    this.activeIndex = 0
-    this.render()
-  }
-
-  render() {
-    if (!this.list) return
-
-    if (this.filtered.length === 0) {
-      this.list.innerHTML = `<li class="command-palette-empty">No results found</li>`
-      return
-    }
-
-    this.list.innerHTML = this.filtered.map((cmd, i) => `
-      <li class="command-palette-item ${i === this.activeIndex ? "is-active" : ""}" role="option" data-index="${i}">
-        <span class="command-palette-item-icon">${cmd.icon}</span>
-        <span class="command-palette-item-label">${cmd.label}</span>
-        <span class="command-palette-item-hint">${cmd.external ? "↗" : cmd.action ? "action" : "jump"}</span>
-      </li>
-    `).join("")
-
-    this.list.querySelectorAll(".command-palette-item").forEach(item => {
-      item.addEventListener("click", () => {
-        this.filtered[parseInt(item.dataset.index)]
-        this.execute(this.filtered[parseInt(item.dataset.index)])
-      })
-      item.addEventListener("mouseenter", () => {
-        this.activeIndex = parseInt(item.dataset.index)
-        this.render()
-      })
-    })
-  }
-
-  execute(cmd) {
-    if (!cmd) return
-
-    if (cmd.action === "copy-email") {
-      this.copyEmail()
-      this.close()
-      return
-    }
-
-    if (cmd.external) {
-      window.open(cmd.href, "_blank", "noopener,noreferrer")
-      this.close()
-      return
-    }
-
-    // Section navigation
-    const target = document.querySelector(cmd.href)
-    if (target) {
-      const offsetTop = target.offsetTop - 80
-      window.scrollTo({ top: offsetTop, behavior: "smooth" })
-    }
-    this.close()
-  }
-
-  copyEmail() {
-    const email = "kenmwendwamuthengi@gmail.com"
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(email).then(() => {
-        this.toast?.show("Email copied to clipboard")
-      }).catch(() => {
-        this.toast?.show("Email: " + email)
-      })
-    } else {
-      this.toast?.show("Email: " + email)
-    }
-  }
-}
-
-// ===== HEATMAP MANAGER (GitHub Activity) =====
-class HeatmapManager {
-  constructor(githubAPI) {
-    this.githubAPI = githubAPI
-    this.container = document.getElementById("heatmap-container")
-    this.init()
-  }
-
-  async init() {
-    if (!this.container) return
-    await this.load()
-  }
-
-  async load() {
-    try {
-      const events = await this.githubAPI.getContributionEvents()
-      if (!events || events.length === 0) {
-        this.renderEmpty()
-        return
-      }
-      this.render(events)
-    } catch (error) {
-      console.error("Error loading heatmap:", error)
-      this.renderEmpty()
-    }
-  }
-
-  buildActivityMap(events) {
-    const map = new Map()
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-
-    const days = 140 // ~20 weeks
-    for (let i = days - 1; i >= 0; i--) {
-      const d = new Date(today)
-      d.setDate(d.getDate() - i)
-      map.set(this.dateKey(d), 0)
-    }
-
-    events.forEach(event => {
-      const d = new Date(event.created_at)
-      d.setHours(0, 0, 0, 0)
-      const key = this.dateKey(d)
-      if (map.has(key)) {
-        const increments =
-          event.type === "PushEvent" ? (event.payload?.commits?.length || 1) : 1
-        map.set(key, map.get(key) + increments)
-      }
-    })
-
-    return map
-  }
-
-  dateKey(d) {
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`
-  }
-
-  getLevel(count) {
-    if (count === 0) return 0
-    if (count <= 2) return 1
-    if (count <= 4) return 2
-    if (count <= 6) return 3
-    return 4
-  }
-
-  render(events) {
-    const map = this.buildActivityMap(events)
-    const sortedDates = [...map.keys()].sort()
-    const totalContribs = [...map.values()].reduce((a, b) => a + b, 0)
-
-    // Align to weekday columns (Sun–Sat)
-    const firstDate = new Date(sortedDates[0] + "T00:00:00")
-    const startDay = firstDate.getDay()
-    for (let i = 0; i < startDay; i++) {
-      sortedDates.unshift(null)
-    }
-
-    this.container.querySelectorAll(".skeleton-card").forEach(el => el.remove())
-
-    this.container.innerHTML = `
-      <div class="heatmap">
-        <div class="heatmap-grid">
-          ${sortedDates.map(dateStr => {
-      if (!dateStr) return `<div class="heatmap-cell" style="visibility:hidden;"></div>`
-      const count = map.get(dateStr)
-      const level = this.getLevel(count)
-      const d = new Date(dateStr + "T00:00:00")
-      const label = d.toLocaleDateString("en-US", { month: "short", day: "numeric" })
-      return `<div class="heatmap-cell" data-level="${level}" title="${label}: ${count} contribution${count !== 1 ? "s" : ""}"></div>`
-    }).join("")}
-        </div>
-        <div class="heatmap-footer">
-          <span>${totalContribs} contributions in the last ${map.size} days</span>
-          <div class="heatmap-legend">
-            <span>Less</span>
-            <div class="heatmap-legend-cells">
-              <div class="heatmap-cell" data-level="0"></div>
-              <div class="heatmap-cell" data-level="1"></div>
-              <div class="heatmap-cell" data-level="2"></div>
-              <div class="heatmap-cell" data-level="3"></div>
-              <div class="heatmap-cell" data-level="4"></div>
-            </div>
-            <span>More</span>
-          </div>
-        </div>
-      </div>
-    `
-    document.dispatchEvent(new CustomEvent("content:rendered"))
-  }
-
-  renderEmpty() {
-    this.container.querySelectorAll(".skeleton-card").forEach(el => el.remove())
-    this.container.innerHTML = `
-      <div class="heatmap">
-        <p style="text-align:center; color: var(--color-text-muted); padding: var(--space-8) 0;">
-          No recent public activity to display. <a href="https://github.com/${CONFIG.github.username}" target="_blank" rel="noopener noreferrer" style="color: var(--color-primary); font-weight: var(--fw-semibold);">View GitHub profile →</a>
-        </p>
-      </div>
-    `
   }
 }
 
@@ -1082,10 +906,8 @@ class App {
     this.navigationManager = null
     this.projectManager = null
     this.animationManager = null
-    this.heroRotator = null
     this.toast = null
-    this.commandPalette = null
-    this.heatmapManager = null
+    this.activityFeedManager = null
     this.projectFilter = null
     this.readmeViewer = null
     this.githubAPI = null
@@ -1100,8 +922,7 @@ class App {
       this.githubAPI = new GitHubAPI()
       this.readmeViewer = new ReadmeViewer(this.githubAPI)
       this.projectFilter = new ProjectFilter()
-      this.commandPalette = new CommandPalette(this.toast)
-      this.heatmapManager = new HeatmapManager(this.githubAPI)
+      this.activityFeedManager = new ActivityFeedManager(this.githubAPI)
 
       this.projectManager = new ProjectManager({
         githubAPI: this.githubAPI,
@@ -1111,7 +932,6 @@ class App {
 
       if (!Utils.prefersReducedMotion()) {
         this.animationManager = new AnimationManager()
-        this.heroRotator = new HeroRotator()
       }
 
       this.bindCopyEmail()
@@ -1156,23 +976,3 @@ window.addEventListener("error", (event) => {
 window.addEventListener("unhandledrejection", (event) => {
   console.error("Unhandled promise rejection:", event.reason)
 })
-
-// ===== EXPORT FOR TESTING (if needed) =====
-if (typeof module !== "undefined" && module.exports) {
-  module.exports = {
-    ThemeManager,
-    NavigationManager,
-    HeroRotator,
-    GitHubAPI,
-    StatsManager,
-    ProjectManager,
-    AnimationManager,
-    Toast,
-    CommandPalette,
-    HeatmapManager,
-    ProjectFilter,
-    ReadmeViewer,
-    Utils,
-    CONFIG,
-  }
-}
