@@ -1,423 +1,111 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kennedy Muthengi — Full-Stack Developer · Nairobi</title>
-    <meta name="description"
-        content="Kennedy Muthengi is a full-stack developer based in Nairobi, Kenya, building fintech tools, developer APIs, and accessible web platforms. Founder of EventTik.">
-    <meta name="keywords"
-        content="Kennedy Muthengi, full-stack developer, Nairobi, Kenya, fintech, M-Pesa, EventTik, web accessibility, developer APIs, TypeScript, React, Node.js">
-    <meta name="author" content="Kennedy Muthengi">
-    <meta name="robots" content="index, follow">
-    <meta name="theme-color" content="#4f46e5">
-    <link rel="canonical" href="https://yourdudeken.github.io/">
-
-    <!-- Open Graph -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://yourdudeken.github.io/">
-    <meta property="og:title" content="Kennedy Muthengi — Full-Stack Developer · Nairobi">
-    <meta property="og:description" content="Full-stack developer building fintech tools, developer APIs, and accessible web platforms. Founder of EventTik.">
-    <meta property="og:image" content="https://yourdudeken.github.io/assets/ken-photo.jpeg">
-    <meta property="og:site_name" content="Kennedy Muthengi">
-    <meta property="og:locale" content="en_US">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:site" content="@yourdudeken">
-    <meta name="twitter:creator" content="@yourdudeken">
-    <meta name="twitter:title" content="Kennedy Muthengi — Full-Stack Developer · Nairobi">
-    <meta name="twitter:description" content="Full-stack developer building fintech tools, developer APIs, and accessible web platforms. Founder of EventTik.">
-    <meta name="twitter:image" content="https://yourdudeken.github.io/assets/ken-photo.jpeg">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="styles/main.css">
-
-    <link rel="icon" type="image/png" href="assets/ken-photo-circle.png">
-    <link rel="apple-touch-icon" href="assets/ken-photo-circle.png">
-    <link rel="manifest" href="site.webmanifest">
-    <link rel="sitemap" type="application/xml" href="sitemap.xml">
-
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "Kennedy Muthengi",
-      "alternateName": "Ken",
-      "url": "https://yourdudeken.github.io",
-      "image": "https://yourdudeken.github.io/assets/ken-photo.jpeg",
-      "sameAs": [
-        "https://github.com/yourdudeken",
-        "https://linkedin.com/in/yourdudeken",
-        "https://twitter.com/yourdudeken"
-      ],
-      "jobTitle": "Full-Stack Developer",
-      "address": { "@type": "PostalAddress", "addressLocality": "Nairobi", "addressCountry": "Kenya" },
-      "knowsAbout": ["Full-Stack Development", "Fintech", "M-Pesa Integration", "Web Accessibility", "Developer APIs"]
-    }
-    </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Developer portfolio for yourdudeken, generated live from GitHub." />
+  <title>yourdudeken — Developer Portfolio</title>
+  <link rel="preconnect" href="https://api.github.com" />
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
-    <a href="#main" class="skip-link">Skip to main content</a>
+  <a class="skip-link" href="#repositories">Skip to repositories</a>
 
-    <!-- README Viewer Modal -->
-    <div id="readme-viewer" class="readme-viewer" role="dialog" aria-modal="true" aria-label="Repository README" hidden>
-        <div class="readme-viewer-backdrop" data-rv-close></div>
-        <div class="readme-viewer-panel">
-            <div class="readme-viewer-header">
-                <h3 id="readme-viewer-title" class="readme-viewer-title">README</h3>
-                <button class="readme-viewer-close" data-rv-close aria-label="Close README viewer">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                </button>
-            </div>
-            <div class="readme-viewer-body">
-                <div id="readme-viewer-content" class="readme-viewer-content markdown-body"></div>
-            </div>
-        </div>
+  <header class="site-header" id="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="https://github.com/yourdudeken" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile">
+        <svg class="github-mark" viewBox="0 0 16 16" width="22" height="22" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+        <span class="brand-text" id="brand-text">yourdudeken</span>
+      </a>
+      <nav class="header-nav" aria-label="Sections">
+        <a href="#featured" class="header-link">Featured</a>
+        <a href="#repositories" class="header-link">Repositories</a>
+        <a href="#activity" class="header-link">Activity</a>
+      </nav>
     </div>
+  </header>
 
-    <!-- Toast -->
-    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
-
-    <!-- Navigation -->
-    <nav class="nav" role="navigation" aria-label="Main navigation">
-        <div class="nav-container">
-            <a href="#hero" class="nav-brand">Kennedy Muthengi</a>
-            <div class="nav-links">
-                <a href="#about" class="nav-link">About</a>
-                <a href="#work" class="nav-link">Work</a>
-                <a href="#projects" class="nav-link">Open Source</a>
-                <a href="#activity" class="nav-link">Activity</a>
-                <a href="#contact" class="nav-link">Contact</a>
-            </div>
-            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
-                <span class="theme-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                    </svg>
-                </span>
-            </button>
-            <button id="nav-toggle" class="nav-toggle" aria-label="Open menu" aria-expanded="false">
-                <span></span><span></span><span></span>
-            </button>
+  <main>
+    <!-- HERO -->
+    <section class="hero" id="hero" aria-labelledby="hero-name">
+      <div class="wrap hero-inner" id="hero-content">
+        <div class="hero-skeleton" id="hero-skeleton" aria-hidden="true">
+          <div class="skel skel-avatar"></div>
+          <div class="skel skel-line" style="width:240px;height:32px"></div>
+          <div class="skel skel-line" style="width:160px;height:18px"></div>
+          <div class="skel skel-line" style="width:80%;height:18px"></div>
+          <div class="skel skel-line" style="width:60%;height:18px"></div>
+          <div class="skel skel-row">
+            <div class="skel skel-pill"></div>
+            <div class="skel skel-pill"></div>
+            <div class="skel skel-pill"></div>
+          </div>
         </div>
-    </nav>
+      </div>
+    </section>
 
-    <main id="main" role="main">
-        <!-- Hero Section -->
-        <section id="hero" class="hero">
-            <div class="hero-grid-texture" aria-hidden="true"></div>
-            <div class="hero-container">
-                <div class="hero-content">
-                    <img src="assets/ken-photo.jpeg" alt="Kennedy Muthengi's profile picture" class="hero-avatar" width="140" height="140">
-                    <span class="hero-availability">
-                        <span class="status-dot"></span>
-                        Available for new projects
-                    </span>
-                    <p class="hero-eyebrow">Hi, I'm Kennedy — based in Nairobi, Kenya</p>
-                    <h1 class="hero-title">Full-stack developer building&nbsp;tools that work for Africa</h1>
-                    <p class="hero-tagline">I design and ship web platforms, payment integrations, and developer APIs — with a focus on accessibility and products that serve real needs. Founder of EventTik.</p>
-                    <div class="hero-actions">
-                        <a href="#work" class="btn btn-primary">View My Work</a>
-                        <a href="#contact" class="btn btn-secondary">Get In Touch</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- About Section -->
-        <section id="about" class="about">
-            <div class="container">
-                <div class="section-header reveal">
-                    <span class="section-eyebrow">About</span>
-                    <h2 class="section-title">A bit about me</h2>
-                    <p class="section-subtitle">Full-stack developer advocating for responsive, accessible, and inclusive digital products.</p>
-                </div>
-                <div class="about-content">
-                    <div class="about-text reveal">
-                        <p>I'm Kennedy Muthengi, a full-stack developer based in Nairobi. I build web platforms, fintech tools, and developer APIs — with a particular interest in payments, accessibility, and products built for African markets.</p>
-                        <p>My recent work includes EventTik, a ticketing and event platform with M-Pesa built in, and several open-source projects exploring AI-assisted tooling and self-hosted software. I care about clean architecture, fast load times, and interfaces that anyone can use.</p>
-                        <div class="about-stats reveal-stagger">
-                            <div class="stat-card">
-                                <div class="stat-value" data-stat="repos">—</div>
-                                <div class="stat-label">Repos</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-value" data-stat="stars">—</div>
-                                <div class="stat-label">Stars</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-value" data-stat="followers">—</div>
-                                <div class="stat-label">Followers</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="skills reveal">
-                        <h3 class="skills-title">Skills & Technologies</h3>
-                        <div class="skills-grid">
-                            <span class="skill-tag">TypeScript</span>
-                            <span class="skill-tag">JavaScript</span>
-                            <span class="skill-tag">React</span>
-                            <span class="skill-tag">Node.js</span>
-                            <span class="skill-tag">Python</span>
-                            <span class="skill-tag">PostgreSQL</span>
-                            <span class="skill-tag">Supabase</span>
-                            <span class="skill-tag">Docker</span>
-                            <span class="skill-tag">AWS</span>
-                            <span class="skill-tag">M-Pesa Daraja</span>
-                            <span class="skill-tag">REST APIs</span>
-                            <span class="skill-tag">Web Accessibility</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Work / Flagship Projects -->
-        <section id="work" class="work">
-            <div class="container">
-                <div class="section-header reveal">
-                    <span class="section-eyebrow">Selected Work</span>
-                    <h2 class="section-title">Flagship projects</h2>
-                    <p class="section-subtitle">Products and platforms I've built — live, with real users and real integrations.</p>
-                </div>
-                <div class="work-grid reveal-stagger">
-                    <!-- EventTik -->
-                    <div class="work-card work-card--featured">
-                        <div class="work-image">
-                            <img src="assets/eventtik.png" alt="EventTik platform screenshot showing event ticketing interface" loading="lazy">
-                        </div>
-                        <div class="work-content">
-                            <div class="work-header">
-                                <h3 class="work-title">EventTik</h3>
-                                <span class="work-status">Live</span>
-                            </div>
-                            <p class="work-description">
-                                A modern ticketing and event platform built for how Africa moves. Sell tickets, scan at the door, accept M-Pesa, manage staff, and build on a developer-first API. One platform for every event.
-                            </p>
-                            <div class="work-tech">
-                                <span class="work-tech-tag">M-Pesa</span>
-                                <span class="work-tech-tag">Ticketing API</span>
-                                <span class="work-tech-tag">QR Scan</span>
-                                <span class="work-tech-tag">Staff Management</span>
-                            </div>
-                            <div class="work-actions">
-                                <a href="https://eventtik.co.ke" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                                    Visit Website
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- driveos -->
-                    <div class="work-card">
-                        <div class="work-content work-content--flat">
-                            <div class="work-header">
-                                <h3 class="work-title">driveos</h3>
-                                <span class="work-status">Open Source</span>
-                            </div>
-                            <p class="work-description">
-                                Google Drive-based task synergy — turn your Drive into a structured, AI-assisted workspace. Manage tasks and files together without leaving your existing storage.
-                            </p>
-                            <div class="work-tech">
-                                <span class="work-tech-tag">TypeScript</span>
-                                <span class="work-tech-tag">Google Drive API</span>
-                                <span class="work-tech-tag">AI</span>
-                                <span class="work-tech-tag">Productivity</span>
-                            </div>
-                            <div class="work-actions">
-                                <a href="https://github.com/yourdudeken/driveos" class="btn btn-small" target="_blank" rel="noopener noreferrer">View on GitHub</a>
-                                <a href="https://driveos-demo.vercel.app" class="btn btn-small btn-secondary" target="_blank" rel="noopener noreferrer">Live Demo</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- capturenest -->
-                    <div class="work-card">
-                        <div class="work-content work-content--flat">
-                            <div class="work-header">
-                                <h3 class="work-title">capturenest</h3>
-                                <span class="work-status">Open Source</span>
-                            </div>
-                            <p class="work-description">
-                                An AI-powered, self-hosted multimedia journal. Capture, organize, and retrieve notes, images, and audio with retrieval-augmented generation — all running on your own infrastructure via Docker.
-                            </p>
-                            <div class="work-tech">
-                                <span class="work-tech-tag">TypeScript</span>
-                                <span class="work-tech-tag">Docker</span>
-                                <span class="work-tech-tag">RAG</span>
-                                <span class="work-tech-tag">LLM</span>
-                            </div>
-                            <div class="work-actions">
-                                <a href="https://github.com/yourdudeken/capturenest" class="btn btn-small" target="_blank" rel="noopener noreferrer">View on GitHub</a>
-                                <button class="btn btn-small btn-secondary" data-readme="capturenest" data-display-name="capturenest">Read README</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- GitHub Activity Feed -->
-        <section id="activity" class="activity">
-            <div class="container">
-                <div class="section-header reveal">
-                    <span class="section-eyebrow">Activity</span>
-                    <h2 class="section-title">GitHub activity</h2>
-                    <p class="section-subtitle">A full feed of my recent public activity — commits, pull requests, releases, and more.</p>
-                </div>
-                <div id="activity-feed" class="activity-feed reveal">
-                    <div class="skeleton-card" aria-hidden="true">
-                        <div class="skeleton skeleton-line skeleton-line--title"></div>
-                        <div class="skeleton skeleton-line skeleton-line--lg"></div>
-                        <div class="skeleton skeleton-line skeleton-line--md"></div>
-                    </div>
-                    <div class="skeleton-card" aria-hidden="true">
-                        <div class="skeleton skeleton-line skeleton-line--title"></div>
-                        <div class="skeleton skeleton-line skeleton-line--lg"></div>
-                        <div class="skeleton skeleton-line skeleton-line--md"></div>
-                    </div>
-                    <div class="skeleton-card" aria-hidden="true">
-                        <div class="skeleton skeleton-line skeleton-line--title"></div>
-                        <div class="skeleton skeleton-line skeleton-line--lg"></div>
-                        <div class="skeleton skeleton-line skeleton-line--md"></div>
-                    </div>
-                    <noscript>
-                        <p style="text-align:center; color: var(--color-text-muted);">Enable JavaScript to view activity.</p>
-                    </noscript>
-                </div>
-            </div>
-        </section>
-
-        <!-- Projects / Open Source -->
-        <section id="projects" class="projects">
-            <div class="container">
-                <div class="section-header reveal">
-                    <span class="section-eyebrow">Open Source</span>
-                    <h2 class="section-title">Repositories from GitHub</h2>
-                    <p class="section-subtitle">Live from the GitHub API — forks filtered out, sorted by recent activity.</p>
-                </div>
-                <div id="project-filter-bar" class="project-filter-bar reveal" hidden>
-                    <div class="project-search-wrap">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                        <input type="text" id="project-search" class="project-search" placeholder="Search repositories…" aria-label="Search repositories">
-                    </div>
-                    <div id="project-filter-chips" class="project-filter-chips" role="group" aria-label="Filter by language"></div>
-                </div>
-                <div id="projects-grid" class="projects-grid">
-                    <div class="skeleton-card" aria-hidden="true">
-                        <div class="skeleton skeleton-line skeleton-line--title"></div>
-                        <div class="skeleton skeleton-line skeleton-line--lg"></div>
-                        <div class="skeleton skeleton-line skeleton-line--md"></div>
-                        <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
-                            <div class="skeleton skeleton-line skeleton-line--sm"></div>
-                            <div class="skeleton skeleton-line skeleton-line--sm"></div>
-                        </div>
-                    </div>
-                    <div class="skeleton-card" aria-hidden="true">
-                        <div class="skeleton skeleton-line skeleton-line--title"></div>
-                        <div class="skeleton skeleton-line skeleton-line--lg"></div>
-                        <div class="skeleton skeleton-line skeleton-line--md"></div>
-                        <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
-                            <div class="skeleton skeleton-line skeleton-line--sm"></div>
-                            <div class="skeleton skeleton-line skeleton-line--sm"></div>
-                        </div>
-                    </div>
-                    <div class="skeleton-card" aria-hidden="true">
-                        <div class="skeleton skeleton-line skeleton-line--title"></div>
-                        <div class="skeleton skeleton-line skeleton-line--lg"></div>
-                        <div class="skeleton skeleton-line skeleton-line--md"></div>
-                        <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
-                            <div class="skeleton skeleton-line skeleton-line--sm"></div>
-                            <div class="skeleton skeleton-line skeleton-line--sm"></div>
-                        </div>
-                    </div>
-                    <noscript>
-                        <div class="project-card" style="grid-column: 1 / -1; text-align: center; border-style: dashed; box-shadow: none; background: transparent;">
-                            <div class="project-content">
-                                <h3 class="project-title">JavaScript Required</h3>
-                                <p class="project-description">Please enable JavaScript to view repositories from my GitHub.</p>
-                                <div class="project-actions" style="justify-content: center;">
-                                    <a href="https://github.com/yourdudeken" class="btn btn-small" target="_blank" rel="noopener noreferrer">View GitHub Profile</a>
-                                </div>
-                            </div>
-                        </div>
-                    </noscript>
-                </div>
-            </div>
-        </section>
-
-        <!-- Contact Section -->
-        <section id="contact" class="contact">
-            <div class="container">
-                <div class="section-header reveal">
-                    <span class="section-eyebrow">Contact</span>
-                    <h2 class="section-title">Get in touch</h2>
-                    <p class="section-subtitle">I'm always interested in new opportunities and collaborations.</p>
-                </div>
-                <div class="contact-content reveal">
-                    <p class="contact-text">Have a project in mind or just want to say hello? My inbox is always open.</p>
-                    <div class="contact-links">
-                        <div class="contact-link-group">
-                            <a href="mailto:kenmwendwamuthengi@gmail.com" class="contact-link" aria-label="Send email">
-                                <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                                    <polyline points="22,6 12,13 2,6"></polyline>
-                                </svg>
-                                Email
-                            </a>
-                            <button id="copy-email" class="contact-link-copy" aria-label="Copy email address to clipboard" title="Copy email">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                            </button>
-                        </div>
-                        <a href="https://github.com/yourdudeken" class="contact-link" aria-label="Visit GitHub profile" target="_blank" rel="noopener noreferrer">
-                            <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
-                            </svg>
-                            GitHub
-                        </a>
-                        <a href="https://linkedin.com/in/yourdudeken" class="contact-link" aria-label="Visit LinkedIn profile" target="_blank" rel="noopener noreferrer">
-                            <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-                                <rect x="2" y="9" width="4" height="12"></rect>
-                                <circle cx="4" cy="4" r="2"></circle>
-                            </svg>
-                            LinkedIn
-                        </a>
-                        <a href="https://twitter.com/yourdudeken" class="contact-link" aria-label="Visit Twitter profile" target="_blank" rel="noopener noreferrer">
-                            <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
-                            </svg>
-                            Twitter
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer class="footer" role="contentinfo">
-        <div class="container">
-            <div class="footer-content">
-                <p>&copy; <span id="footer-year">2026</span> Kennedy Muthengi. Built with precision and craft.</p>
-                <div class="footer-bottom-links">
-                    <a href="https://github.com/yourdudeken/yourdudeken.github.io" target="_blank" rel="noopener noreferrer">Source Code</a>
-                    <a href="#hero">Back to Top</a>
-                </div>
-            </div>
+    <!-- FEATURED -->
+    <section class="section" id="featured" aria-labelledby="featured-title" hidden>
+      <div class="wrap">
+        <div class="section-head">
+          <h2 class="section-title" id="featured-title">Featured Projects</h2>
+          <p class="section-subtitle">Top repositories by stars, forks, and recency — ranked automatically.</p>
         </div>
-    </footer>
+        <div class="card-grid" id="featured-grid"></div>
+      </div>
+    </section>
 
-    <script src="scripts/main.js"></script>
+    <!-- REPOSITORIES -->
+    <section class="section" id="repositories" aria-labelledby="repos-title">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 class="section-title" id="repos-title">Repositories</h2>
+          <p class="section-subtitle">All public repositories, sorted by last updated.</p>
+        </div>
+
+        <div class="repo-controls" id="repo-controls" hidden>
+          <div class="search-wrap">
+            <svg class="search-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M11.5 7a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0zm-.82 4.74a6 6 0 1 1 1.06-1.06l3.04 3.04a.75.75 0 1 1-1.06 1.06l-3.04-3.04z"></path></svg>
+            <input type="search" id="repo-search" class="search-input" placeholder="Filter by name or description…" aria-label="Filter repositories" />
+          </div>
+          <div class="lang-chips" id="lang-chips" role="group" aria-label="Filter by language"></div>
+        </div>
+
+        <div class="repo-status" id="repo-status" aria-live="polite">
+          <div class="repo-skeleton-grid" id="repo-skeleton" aria-hidden="true">
+            <div class="skel-card"></div><div class="skel-card"></div><div class="skel-card"></div>
+            <div class="skel-card"></div><div class="skel-card"></div><div class="skel-card"></div>
+          </div>
+        </div>
+
+        <div class="card-grid" id="repo-grid"></div>
+      </div>
+    </section>
+
+    <!-- ACTIVITY -->
+    <section class="section" id="activity" aria-labelledby="activity-title" hidden>
+      <div class="wrap">
+        <div class="section-head">
+          <h2 class="section-title" id="activity-title">Activity</h2>
+          <p class="section-subtitle">Statistics computed live from public repository data.</p>
+        </div>
+        <div class="stats-grid" id="stats-grid"></div>
+        <div class="languages-block" id="languages-block" hidden>
+          <h3 class="block-title">Most Used Languages</h3>
+          <div class="lang-bar" id="lang-bar" role="img" aria-label="Language distribution"></div>
+          <ul class="lang-legend" id="lang-legend"></ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <p class="footer-text">Generated live from the GitHub API. No mock data.</p>
+      <a class="footer-link" href="https://github.com/yourdudeken" target="_blank" rel="noopener noreferrer">github.com/yourdudeken</a>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
-
 </html>
