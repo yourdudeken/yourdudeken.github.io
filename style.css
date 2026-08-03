@@ -180,6 +180,16 @@ a:hover { text-decoration: underline; }
 }
 .hero-blog a { color: var(--text-muted); }
 .hero-blog a:hover { color: var(--accent); }
+.hero-twitter,
+.hero-blog {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+.hero-twitter a { color: var(--text-muted); }
+.hero-twitter a:hover { color: var(--accent); }
 
 /* ===== BUTTONS ===== */
 .btn {
@@ -205,6 +215,11 @@ a:hover { text-decoration: underline; }
   color: #fff;
 }
 .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.btn-small {
+  padding: var(--space-2) var(--space-3);
+  font-size: 13px;
+  font-weight: 500;
+}
 
 /* ===== SECTIONS ===== */
 .section {
@@ -265,6 +280,20 @@ a:hover { text-decoration: underline; }
   word-break: break-word;
 }
 .repo-name:hover { text-decoration: underline; }
+.repo-name-wrap { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
+.fork-badge {
+  display: inline-block;
+  padding: 2px var(--space-2);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
 .repo-desc {
   color: var(--text-muted);
   font-size: 14px;

@@ -133,6 +133,7 @@
     location: '<svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M11.5 5.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Zm-1 0a2.5 2.5 0 1 0-5 0 2.5 2.5 0 0 0 5 0Z"></path><path d="M8 1a7 7 0 0 0-7 7c0 2.9 1.96 5.55 4.31 7.5l.001.001.69.55.69-.55C8.04 13.55 10 10.9 10 8a7 7 0 0 0-7-7Z"></path></svg>',
     link: '<svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .75.75 0 0 1 .53-1.28 3.5 3.5 0 0 0 4.95 0l2.5-2.5a2.5 2.5 0 0 0-3.535-3.535l-1.25 1.25a.75.75 0 0 1-1.06-1.06Z"></path></svg>',
     org: '<svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M1.75 16A1.75 1.75 0 0 1 0 14.25V1.75C0 .784.784 0 1.75 0h8.5C11.216 0 12 .784 12 1.75v12.5c0 .085-.006.168-.018.25h2.268a.25.25 0 0 0 .25-.25V8.285a.25.25 0 0 0-.111-.208l-1.5-1A.25.25 0 0 1 13 6.886V5.5a.75.75 0 0 1 1.5 0v.94l.89.593a1.75 1.75 0 0 1 .86 1.502v5.715A1.75 1.75 0 0 1 14.25 16h-3.5a.75.75 0 0 1-.197-.026c-.04.005-.083.005-.125.005a.75.75 0 0 1-.75-.75V1.75a.25.25 0 0 0-.25-.25h-8.5a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h2.5a.75.75 0 0 1 0 1.5h-2.5ZM5 12.75a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 0 1.5h-3.5a.75.75 0 0 1-.75-.75Z"></path></svg>',
+    twitter: '<svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M9.5 6.5h4l-5.2 6 5.2 6.8h-4l-3.2-4-3.8 4H1.5l5.5-6.4L1.5 6.5h4.1l3 3.6 3-3.6Zm-.7 11.2h1L5.3 6.5H4.2l4.6 11.2Z"></path></svg>',
   };
 
   /* ============================================================
@@ -163,13 +164,16 @@
   function repoCard(repo) {
     const card = h("div", { class: "repo-card reveal" });
 
-    // Top: name + relative time
+    // Top: name + fork badge + relative time
     const top = h("div", { class: "repo-card-top" },
-      h("a", {
-        class: "repo-name",
-        href: repo.html_url,
-        target: "_blank", rel: "noopener noreferrer",
-      }, repo.name)
+      h("div", { class: "repo-name-wrap" },
+        h("a", {
+          class: "repo-name",
+          href: repo.html_url,
+          target: "_blank", rel: "noopener noreferrer",
+        }, repo.name),
+        repo.fork ? h("span", { class: "fork-badge" }, "Fork") : null
+      )
     );
     if (repo.updated_at) {
       top.append(h("span", { class: "repo-updated" }, timeAgo(repo.updated_at)));
@@ -235,7 +239,8 @@
     );
 
     if (profile.bio) {
-      host.append(h("p", { class: "hero-bio" }, profile.bio));
+      const bio = profile.bio.replace(/\r\n/g, "\n").trim();
+      host.append(h("p", { class: "hero-bio" }, bio));
     }
 
     // Meta row: location, company, blog
@@ -252,6 +257,16 @@
         h("span", { class: "hero-blog", html: ICON.link }, " ",
           h("a", { href: url, target: "_blank", rel: "noopener noreferrer" },
             profile.blog.replace(/^https?:\/\//, ""))
+        )
+      );
+    }
+    if (profile.twitter_username) {
+      meta.push(
+        h("span", { class: "hero-twitter", html: ICON.twitter }, " ",
+          h("a", {
+            href: `https://twitter.com/${profile.twitter_username}`,
+            target: "_blank", rel: "noopener noreferrer",
+          }, `@${profile.twitter_username}`)
         )
       );
     }
