@@ -19,8 +19,9 @@
       </a>
       <nav class="header-nav" aria-label="Sections">
         <a href="#featured" class="header-link">Featured</a>
+        <a href="#insights" class="header-link">Insights</a>
         <a href="#repositories" class="header-link">Repositories</a>
-        <a href="#activity" class="header-link">Activity</a>
+        <a href="#recent-work" class="header-link">Recent Work</a>
       </nav>
     </div>
   </header>
@@ -60,7 +61,7 @@
       <div class="wrap">
         <div class="section-head">
           <h2 class="section-title" id="repos-title">Repositories</h2>
-          <p class="section-subtitle">All public repositories, sorted by last updated.</p>
+          <p class="section-subtitle">All public repositories with detailed metadata and live GitHub context.</p>
         </div>
 
         <div class="repo-controls" id="repo-controls" hidden>
@@ -82,11 +83,11 @@
       </div>
     </section>
 
-    <!-- ACTIVITY -->
-    <section class="section" id="activity" aria-labelledby="activity-title" hidden>
+    <!-- INSIGHTS -->
+    <section class="section" id="insights" aria-labelledby="activity-title" hidden>
       <div class="wrap">
         <div class="section-head">
-          <h2 class="section-title" id="activity-title">Activity</h2>
+          <h2 class="section-title" id="activity-title">Insights</h2>
           <p class="section-subtitle">Statistics computed live from public repository data.</p>
         </div>
         <div class="stats-grid" id="stats-grid"></div>
@@ -95,6 +96,18 @@
           <div class="lang-bar" id="lang-bar" role="img" aria-label="Language distribution"></div>
           <ul class="lang-legend" id="lang-legend"></ul>
         </div>
+      </div>
+    </section>
+
+    <!-- RECENT WORK -->
+    <section class="section" id="recent-work" aria-labelledby="recent-work-title" hidden>
+      <div class="wrap">
+        <div class="section-head">
+          <h2 class="section-title" id="recent-work-title">Recent GitHub Work</h2>
+          <p class="section-subtitle">Latest pushes, pull requests, and issue activity from the GitHub Events API.</p>
+        </div>
+        <div class="work-status" id="work-status" aria-live="polite"></div>
+        <div class="work-feed" id="work-feed"></div>
       </div>
     </section>
   </main>
