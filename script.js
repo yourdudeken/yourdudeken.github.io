@@ -13,6 +13,7 @@
   const USERNAME = "yourdudeken";
   const API = "https://api.github.com";
   const MAX_PAGES = 10;
+  const MAX_RECENT_EVENTS = 12;
 
   /** GitHub's official language color palette */
   const LANG_COLORS = {
@@ -66,13 +67,16 @@
     repos: [],
     activeLang: "all",
     searchQuery: "",
+    events: [],
   };
 
   /* ============================================================
      API layer
      ============================================================ */
   async function ghFetch(url) {
-    const res = await fetch(url);
+    const res = await fetch(url, {
+      headers: { Accept: "application/vnd.github+json" },
+    });
     if (res.status === 403 || res.status === 429) throw new Error("rate_limit");
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     return res.json();
@@ -93,6 +97,13 @@
       if (batch.length < 100) break;
     }
     return repos;
+  }
+
+  async function fetchRecentEvents() {
+    const events = await ghFetch(
+      `${API}/users/${USERNAME}/events/public?per_page=${MAX_RECENT_EVENTS}`
+    );
+    return Array.isArray(events) ? events : [];
   }
 
   /* ============================================================
@@ -120,6 +131,17 @@
     if (days < 30) return `${days}d ago`;
     if (days < 365) return `${Math.floor(days / 30)}mo ago`;
     return `${Math.floor(days / 365)}y ago`;
+  }
+
+  function pluralize(count, singular, plural = `${singular}s`) {
+    return `${count} ${count === 1 ? singular : plural}`;
+  }
+
+  function fmtSizeKiB(size) {
+    if (!size && size !== 0) return "";
+    if (size >= 1024 * 1024) return `${(size / (1024 * 1024)).toFixed(1)} GB`;
+    if (size >= 1024) return `${(size / 1024).toFixed(1)} MB`;
+    return `${size} KB`;
   }
 
   /* ============================================================
@@ -202,6 +224,35 @@
       h("span", { class: "repo-forks", html: ICON.fork }, ` ${fmtNum(repo.forks_count || 0)}`)
     );
     card.append(meta);
+
+    const details = h("div", { class: "repo-details" });
+    details.append(
+      h("span", { class: "repo-detail-chip" }, `Size: ${fmtSizeKiB(repo.size || 0)}`),
+      h("span", { class: "repo-detail-chip" }, pluralize(repo.open_issues_count || 0, "open issue"))
+    );
+    if (repo.license?.spdx_id && repo.license.spdx_id !== "NOASSERTION") {
+      details.append(h("span", { class: "repo-detail-chip" }, `License: ${repo.license.spdx_id}`));
+    }
+    if (repo.homepage) {
+      const normalized = repo.homepage.startsWith("http") ? repo.homepage : `https://${repo.homepage}`;
+      details.append(
+        h("a", {
+          class: "repo-detail-chip repo-detail-chip-link",
+          href: normalized,
+          target: "_blank",
+          rel: "noopener noreferrer",
+        }, "Live site")
+      );
+    }
+    card.append(details);
+
+    if (Array.isArray(repo.topics) && repo.topics.length) {
+      const topics = h("div", { class: "repo-topics" });
+      repo.topics.slice(0, 5).forEach((topic) => {
+        topics.append(h("span", { class: "repo-topic" }, topic));
+      });
+      card.append(topics);
+    }
 
     // Footer: absolute date + view link
     card.append(
@@ -433,24 +484,128 @@
     observeReveal();
   }
 
+  function eventSummary(event) {
+    const payload = event.payload || {};
+    if (event.type === "PushEvent") {
+     const commits = Array.isArray(payload.commits) ? payload.commits.length : 0;
+     return `Pushed ${pluralize(commits, "commit")} to ${payload.ref ? payload.ref.replace("refs/heads/", "") : "branch"}`;
+    }
+    if (event.type === "PullRequestEvent") {
+     return `${payload.action || "updated"} pull request #${payload.pull_request?.number || ""}`.trim();
+    }
+    if (event.type === "IssuesEvent") {
+     return `${payload.action || "updated"} issue #${payload.issue?.number || ""}`.trim();
+    }
+    if (event.type === "IssueCommentEvent") {
+     return `${payload.action || "updated"} an issue comment`;
+    }
+    if (event.type === "CreateEvent") {
+     return `Created ${payload.ref_type || "resource"}${payload.ref ? ` ${payload.ref}` : ""}`;
+    }
+    if (event.type === "WatchEvent") {
+     return "Starred a repository";
+    }
+    return event.type.replace(/Event$/, "");
+  }
+
+  function renderRecentWork(events) {
+    const section = $("#recent-work");
+    const feed = $("#work-feed");
+    const status = $("#work-status");
+    feed.innerHTML = "";
+    status.innerHTML = "";
+
+    const scoped = events
+     .filter((event) => event?.repo?.name)
+     .slice(0, MAX_RECENT_EVENTS);
+
+    if (!scoped.length) {
+     section.hidden = true;
+     return;
+    }
+
+    scoped.forEach((event) => {
+     const repoName = event.repo.name;
+     const repoUrl = `https://github.com/${repoName}`;
+     const action = eventSummary(event);
+     const actor = event.actor?.display_login || USERNAME;
+     feed.append(
+       h("article", { class: "work-card reveal" },
+         h("div", { class: "work-top" },
+           h("span", { class: "work-type" }, event.type.replace(/Event$/, "")),
+           h("time", { class: "work-time", datetime: event.created_at || "" },
+             event.created_at ? timeAgo(event.created_at) : "")
+         ),
+         h("h3", { class: "work-title" }, action),
+         h("p", { class: "work-meta" },
+           h("span", {}, actor),
+           " • ",
+           h("a", { href: repoUrl, target: "_blank", rel: "noopener noreferrer" }, repoName)
+         )
+       )
+     );
+    });
+
+    const pushCount = scoped.filter((event) => event.type === "PushEvent").length;
+    const prCount = scoped.filter((event) => event.type === "PullRequestEvent").length;
+    const issueCount = scoped.filter((event) => event.type === "IssuesEvent" || event.type === "IssueCommentEvent").length;
+
+    status.append(
+     h("p", { class: "work-kpis" },
+       `${pluralize(scoped.length, "event")} • ${pluralize(pushCount, "push")} • ${pluralize(prCount, "pull request")} • ${pluralize(issueCount, "issue interaction")}`
+     )
+    );
+
+    section.hidden = false;
+    observeReveal();
+  }
+
+  function renderWorkError(err) {
+    const section = $("#recent-work");
+    const status = $("#work-status");
+    const feed = $("#work-feed");
+    status.innerHTML = "";
+    feed.innerHTML = "";
+    status.append(
+     h("div", { class: "status-msg error" },
+       h("p", {}, "Unable to load recent GitHub activity."),
+       h("p", { class: "subtext" },
+         err.message === "rate_limit"
+           ? "GitHub API rate limit reached. Please try again in a few minutes."
+           : "An error occurred while fetching event data.")
+     )
+    );
+    section.hidden = false;
+  }
+
   /* ============================================================
      Render: Activity / Stats
      ============================================================ */
   function renderActivity(repos) {
     if (!repos.length) {
-      $("#activity").hidden = true;
+      $("#insights").hidden = true;
       return;
     }
 
     const totalStars = repos.reduce((s, r) => s + (r.stargazers_count || 0), 0);
     const totalForks = repos.reduce((s, r) => s + (r.forks_count || 0), 0);
+    const totalOpenIssues = repos.reduce((s, r) => s + (r.open_issues_count || 0), 0);
+    const totalRepoSize = repos.reduce((s, r) => s + (r.size || 0), 0);
+    const activeLast30d = repos.filter((r) => {
+      if (!r.pushed_at) return false;
+      return Date.now() - new Date(r.pushed_at).getTime() <= 30 * 86400000;
+    }).length;
+    const avgSize = repos.length ? Math.round(totalRepoSize / repos.length) : 0;
 
     const grid = $("#stats-grid");
     grid.innerHTML = "";
     grid.append(
       statCard(repos.length, "Public Repositories"),
       statCard(totalStars, "Total Stars"),
-      statCard(totalForks, "Total Forks")
+      statCard(totalForks, "Total Forks"),
+      statCard(totalOpenIssues, "Open Issues"),
+      statCard(activeLast30d, "Active Repos (30d)"),
+      statCard(fmtSizeKiB(avgSize), "Avg Repo Size")
     );
 
     // Most used languages
@@ -488,7 +643,7 @@
       $("#languages-block").hidden = false;
     }
 
-    $("#activity").hidden = false;
+    $("#insights").hidden = false;
   }
 
   function statCard(value, label) {
@@ -520,9 +675,10 @@
   async function init() {
     initSearch();
 
-    const [profileResult, reposResult] = await Promise.allSettled([
+    const [profileResult, reposResult, eventsResult] = await Promise.allSettled([
       fetchProfile(),
       fetchAllRepos(),
+      fetchRecentEvents(),
     ]);
 
     // Hero
@@ -549,7 +705,16 @@
         reposResult.status === "rejected" ? reposResult.reason : new Error("empty");
       renderRepoError(err);
       $("#featured").hidden = true;
-      $("#activity").hidden = true;
+      $("#insights").hidden = true;
+    }
+
+    if (eventsResult.status === "fulfilled" && Array.isArray(eventsResult.value)) {
+      state.events = eventsResult.value;
+      renderRecentWork(eventsResult.value);
+    } else {
+      const err =
+        eventsResult.status === "rejected" ? eventsResult.reason : new Error("empty");
+      renderWorkError(err);
     }
 
     observeReveal();
