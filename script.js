@@ -1,5 +1,5 @@
 /**
- * yourdudeken — Developer Portfolio
+ * GitHub-powered developer portfolio
  * 100% static. All data fetched live from the GitHub REST API.
  * Zero mock data, zero hardcoded projects.
  */
@@ -123,6 +123,14 @@
       });
     } catch {
       return "";
+    }
+
+    function fmtYear(iso) {
+      try {
+        return new Date(iso).getFullYear();
+      } catch {
+        return "";
+      }
     }
   }
 
@@ -278,15 +286,26 @@
   function renderHero(profile) {
     const host = $("#hero-content");
     host.innerHTML = "";
+    const profileUrl = profile.html_url || `https://github.com/${profile.login}`;
+    const displayName = profile.name || profile.login;
+
+    document.title = `${displayName} — Developer Portfolio`;
+    const brand = $("#brand-link");
+    brand.href = profileUrl;
+    brand.setAttribute("aria-label", `${displayName}'s GitHub profile`);
+    brand.querySelector(".brand-text").textContent = profile.login;
+    const footerLink = $("#footer-link");
+    footerLink.href = profileUrl;
+    footerLink.textContent = `github.com/${profile.login}`;
 
     host.append(
       h("img", {
         class: "hero-avatar",
         src: profile.avatar_url,
-        alt: `${profile.name || profile.login}'s avatar`,
+        alt: `${displayName}'s avatar`,
         width: 128, height: 128,
       }),
-      h("h1", { class: "hero-name", id: "hero-name" }, profile.name || profile.login),
+      h("h1", { class: "hero-name", id: "hero-name" }, displayName),
       h("div", { class: "hero-login" }, `@${profile.login}`)
     );
 
@@ -334,12 +353,14 @@
         h("span", { class: "hero-stat", html: ICON.users }, " ",
           h("strong", {}, fmtNum(profile.followers)), " followers"),
         h("span", { class: "hero-stat", html: ICON.users }, " ",
-          h("strong", {}, fmtNum(profile.following)), " following")
+          h("strong", {}, fmtNum(profile.following)), " following"),
+        h("span", { class: "hero-stat" },
+          h("strong", {}, fmtNum(profile.public_gists)), " public gists")
       ),
       h("div", { class: "hero-actions" },
         h("a", {
           class: "btn btn-primary",
-          href: profile.html_url,
+          href: profileUrl,
           target: "_blank", rel: "noopener noreferrer",
           html: ICON.repo,
         }, " View GitHub Profile"),
@@ -361,7 +382,7 @@
           "The GitHub API rate limit may have been reached. Please try again in a few minutes."),
         h("a", {
           class: "btn",
-          href: `https://github.com/${USERNAME}`,
+          href: "https://github.com",
           target: "_blank", rel: "noopener noreferrer",
         }, "Visit GitHub Profile")
       )
@@ -542,7 +563,7 @@
      const repoName = event.repo.name;
      const repoUrl = `https://github.com/${repoName}`;
      const action = eventSummary(event);
-     const actor = event.actor?.display_login || USERNAME;
+     const actor = event.actor?.display_login || event.actor?.login || "GitHub user";
      feed.append(
        h("article", { class: "work-card reveal" },
          h("div", { class: "work-top" },
