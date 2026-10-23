@@ -87,9 +87,8 @@ a:hover { text-decoration: underline; }
   width: 100%;
   max-width: var(--container);
   margin: 0 auto;
-  padding: 0 var(--space-4);
+  padding: 0 clamp(12px, 4vw, 32px);
 }
-@media (min-width: 768px) { .wrap { padding: 0 var(--space-8); } }
 
 .skip-link {
   position: absolute;
@@ -117,17 +116,24 @@ a:hover { text-decoration: underline; }
   display: flex;
   align-items: center;
   justify-content: space-between;
+  min-width: 0;
   height: 56px;
 }
 .brand {
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  min-width: 0;
   color: var(--text);
   font-weight: 600;
   font-size: 15px;
 }
 .brand:hover { text-decoration: none; color: var(--accent); }
+.brand-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .github-mark { fill: currentColor; flex-shrink: 0; }
 .header-nav { display: flex; gap: var(--space-1); }
 .header-link {
@@ -304,6 +310,7 @@ a:hover { text-decoration: underline; }
 .repo-card {
   display: flex;
   flex-direction: column;
+  min-width: 0;
   background: var(--bg-subtle);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
@@ -321,6 +328,7 @@ a:hover { text-decoration: underline; }
   align-items: flex-start;
   justify-content: space-between;
   gap: var(--space-2);
+  min-width: 0;
   margin-bottom: var(--space-3);
 }
 .repo-name {
@@ -431,6 +439,7 @@ a:hover { text-decoration: underline; }
 .repo-controls {
   display: flex;
   flex-direction: column;
+  min-width: 0;
   gap: var(--space-3);
   margin-bottom: var(--space-6);
 }
@@ -482,6 +491,7 @@ a:hover { text-decoration: underline; }
 .lang-chips {
   display: flex;
   flex-wrap: wrap;
+  min-width: 0;
   gap: var(--space-2);
 }
 .lang-chip {
@@ -561,6 +571,7 @@ a:hover { text-decoration: underline; }
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: var(--space-5);
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
@@ -587,6 +598,7 @@ a:hover { text-decoration: underline; }
   font-size: 16px;
   font-weight: 600;
   line-height: 1.35;
+  overflow-wrap: anywhere;
 }
 .work-meta {
   font-size: 13px;
@@ -606,6 +618,7 @@ a:hover { text-decoration: underline; }
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: var(--space-6);
+  min-width: 0;
   text-align: center;
 }
 .stat-value {
@@ -727,18 +740,40 @@ a:hover { text-decoration: underline; }
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
-
-  @media (max-width: 700px) {
-    .header-nav { display: none; }
-    .header-inner { gap: var(--space-3); }
-    .brand { margin-right: auto; }
-    .theme-label { display: none; }
-    .theme-toggle { padding: 7px 9px; }
-    .hero { padding: var(--space-16) 0 var(--space-12); }
-    .hero-avatar { width: 104px; height: 104px; }
-    .hero-actions { width: 100%; flex-direction: column; }
-    .hero-actions .btn { justify-content: center; }
-    .sort-wrap { margin-left: 0; }
-    .sort-select { width: 100%; }
-  }
 }
+
+@media (max-width: 860px) {
+  .header-nav { display: none; }
+  .header-inner { gap: var(--space-3); }
+  .brand { margin-right: auto; }
+}
+
+@media (max-width: 767px) {
+  .hero { padding: clamp(48px, 12vw, 80px) 0 48px; }
+  .hero-avatar { width: 104px; height: 104px; }
+  .hero-actions { width: 100%; flex-direction: column; }
+  .hero-actions .btn { justify-content: center; }
+  .repo-controls { align-items: stretch; }
+  .search-wrap { max-width: none; }
+  .sort-wrap { margin-left: 0; }
+  .sort-select { width: 100%; }
+  .section { padding: 48px 0; }
+  .section-head { margin-bottom: 24px; }
+  .stats-grid { gap: 12px; }
+  .stat-card { padding: 16px 12px; }
+  .stat-value { font-size: clamp(24px, 8vw, 36px); }
+}
+
+@media (max-width: 420px) {
+  .theme-label { display: none; }
+  .theme-toggle { padding: 7px 9px; }
+  .hero-name { font-size: clamp(26px, 9vw, 34px); }
+  .hero-login { font-size: 16px; }
+  .hero-stats { gap: 10px 16px; }
+  .hero-stat { font-size: 13px; }
+  .stats-grid { grid-template-columns: 1fr; }
+  .repo-card,
+  .work-card { padding: 16px; }
+  .repo-card-top { align-items: flex-start; }
+  .repo-updated { white-space: nowrap; }
+  .work-kpis { max-width: 100%; flex-wrap: wrap; }
