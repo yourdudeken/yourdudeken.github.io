@@ -67,6 +67,7 @@
     repos: [],
     activeLang: "all",
     searchQuery: "",
+    sort: "updated",
     events: [],
   };
 
@@ -341,7 +342,11 @@
           href: profile.html_url,
           target: "_blank", rel: "noopener noreferrer",
           html: ICON.repo,
-        }, " View GitHub Profile")
+        }, " View GitHub Profile"),
+        h("a", {
+          class: "btn",
+          href: "#repositories",
+        }, " Explore the work")
       )
     );
   }
@@ -414,10 +419,19 @@
       const desc = (repo.description || "").toLowerCase();
       const matchesQuery = !q || name.includes(q) || desc.includes(q);
       return matchesLang && matchesQuery;
+    }).sort((a, b) => {
+      if (state.sort === "stars") return (b.stargazers_count || 0) - (a.stargazers_count || 0);
+      if (state.sort === "name") return (a.name || "").localeCompare(b.name || "");
+      return new Date(b.updated_at) - new Date(a.updated_at);
     });
 
     if (filtered.length === 0) {
-      grid.append(h("div", { class: "empty-state" }, "No repositories match your filters."));
+      grid.append(
+        h("div", { class: "empty-state" },
+          h("strong", {}, "No repositories match your filters."),
+          h("span", {}, "Try a different search or language.")
+        )
+      );
       return;
     }
 
@@ -667,6 +681,31 @@
         applyFilters();
       }, 180);
     });
+    const sort = $("#repo-sort");
+    sort?.addEventListener("change", () => {
+      state.sort = sort.value;
+      applyFilters();
+    });
+  }
+
+  function initTheme() {
+    const toggle = $("#theme-toggle");
+    if (!toggle) return;
+    const saved = localStorage.getItem("portfolio-theme");
+    if (saved === "light") document.documentElement.dataset.theme = "light";
+    const sync = () => {
+      const light = document.documentElement.dataset.theme === "light";
+      toggle.setAttribute("aria-label", light ? "Switch to dark theme" : "Switch to light theme");
+      toggle.querySelector(".theme-label").textContent = light ? "Dark" : "Light";
+      toggle.querySelector(".theme-icon").textContent = light ? "☾" : "☼";
+    };
+    sync();
+    toggle.addEventListener("click", () => {
+      const light = document.documentElement.dataset.theme !== "light";
+      document.documentElement.dataset.theme = light ? "light" : "dark";
+      localStorage.setItem("portfolio-theme", light ? "light" : "dark");
+      sync();
+    });
   }
 
   /* ============================================================
@@ -674,6 +713,7 @@
      ============================================================ */
   async function init() {
     initSearch();
+    initTheme();
 
     const [profileResult, reposResult, eventsResult] = await Promise.allSettled([
       fetchProfile(),

@@ -23,6 +23,10 @@
         <a href="#repositories" class="header-link">Repositories</a>
         <a href="#recent-work" class="header-link">Recent Work</a>
       </nav>
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light theme">
+        <span class="theme-icon" aria-hidden="true">☼</span>
+        <span class="theme-label">Light</span>
+      </button>
     </div>
   </header>
 
@@ -70,6 +74,14 @@
             <input type="search" id="repo-search" class="search-input" placeholder="Filter by name or description…" aria-label="Filter repositories" />
           </div>
           <div class="lang-chips" id="lang-chips" role="group" aria-label="Filter by language"></div>
+          <label class="sort-wrap">
+            <span class="sr-only">Sort repositories</span>
+            <select class="sort-select" id="repo-sort" aria-label="Sort repositories">
+              <option value="updated">Recently updated</option>
+              <option value="stars">Most stars</option>
+              <option value="name">Name A–Z</option>
+            </select>
+          </label>
         </div>
 
         <div class="repo-status" id="repo-status" aria-live="polite">
